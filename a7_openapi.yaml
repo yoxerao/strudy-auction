@@ -1,0 +1,263 @@
+openapi: 3.0.0
+
+info:
+  version: '1.0'
+  title: 'LBAW eAuction Web API'
+  description: 'Web Resources Specification (A7) for eAuction'
+
+servers:
+- url: http://lbaw.fe.up.pt
+  description: Production server
+
+externalDocs:
+  description: Find more info here.
+  url: https://git.fe.up.pt/lbaw/lbaw2223/lbaw22121/-/wikis/home
+
+tags:
+  - name: 'M01: Authentication'
+  - name: 'M02: Profile and User Information'
+  - name: 'M03: Auctions'
+  - name: 'M04: User Interaction'
+  - name: 'M05: Listings'
+  - name: 'M06: User and Auction Administration'
+  - name: 'M07: Static Pages'
+
+paths: 
+  #------------------------------- Authentication -------------------------------
+  /login:
+    get:
+     operationId: R101
+     summary: 'R101: Login Form'
+     description: 'Provide login form. Access: PUB'
+     tags:
+       - 'M01: Authentication'
+     responses:
+       '200':
+         description: 'Ok. Show Log-q UI'
+
+    post:
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                  format: password
+              required:
+                - username
+                - password  
+      responses:
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to homepage.'
+                  value: '/'
+                302Failure:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
+
+
+  /logout:
+    post:
+      operationId: R103
+      summary: 'R103: Logout Action'
+      description: 'Logout the current authenticated used. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful logout. Redirect to homepage.'
+                  value: '/'
+
+
+  /register:
+    get:
+      operationId: R104
+      summary: 'R104: Registration Form'
+      description: 'Provide new user registration form. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Ok. Show Sign-Up UI'
+
+    post:
+      operationId: R105
+      summary: 'R105: Registration Action'
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                picture:
+                 type: string
+                 format: binary
+                password:
+                  type: string
+              required:
+                - name
+                - username
+                - email
+                - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful registration. Redirect to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed registration. Redirect to sign-up form.'
+                  value: '/register'
+
+
+  /recovery:
+    get:
+      operationId: R106
+      summary: 'R106: Passoword Recovery Form'
+      description: 'Provide password recovery form. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Ok. Show password recovery UI'
+
+    post:
+      operationId: R107
+      summary: 'R107: Password Recovery Action'
+      description: 'Processes the password recovery form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+                - email
+                
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful recovery. Redirect to login'
+                  value: '/login'
+                302Failure:
+                  description: 'Failed to recover password . Redirect to recovery form.'
+                  value: '/recovery'
+
+#------------------------------- Profile and User Information -------------------------------
+  /users/{id}:
+    # view profile
+    get:
+      operationId: R108
+      summary: 'R108: View user profile'
+      description: 'Show user profile. Access: USR'
+      tags:
+        - 'M02: Profile and User Information'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show user profile.'
+    
+    # edit profile
+    put:
+      operationId: R109
+      summary: 'R109: Edit Profile Action'
+      description: 'Processes the new user edition form submission. Access: USR'
+      tags:
+        - 'M02: Profile and User Information'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+                password:
+                  type: string
+                  format: password
+
+      responses:
+        '302':
+          description: 'Redirect after processing update profile form.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully edited user profile. Redirect to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed to edit user profile. Redirect to user profile.'
+                  value: '/users/{id}'
