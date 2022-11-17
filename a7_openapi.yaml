@@ -24,6 +24,7 @@ tags:
 
 paths: 
   #------------------------------- Authentication -------------------------------
+  #login 
   /login:
     get:
      operationId: R101
@@ -71,7 +72,7 @@ paths:
                   description: 'Failed authentication. Redirect to login form.'
                   value: '/login'
 
-
+  #logout user
   /logout:
     post:
       operationId: R103
@@ -91,7 +92,7 @@ paths:
                   description: 'Successful logout. Redirect to homepage.'
                   value: '/'
 
-
+  #register user
   /register:
     get:
       operationId: R104
@@ -149,7 +150,7 @@ paths:
                   description: 'Failed registration. Redirect to sign-up form.'
                   value: '/register'
 
-
+  #recover pwd
   /recovery:
     get:
       operationId: R106
@@ -199,8 +200,8 @@ paths:
   /users/{id}:
     # view profile
     get:
-      operationId: R108
-      summary: 'R108: View user profile'
+      operationId: R201
+      summary: 'R201: View user profile'
       description: 'Show user profile. Access: USR'
       tags:
         - 'M02: Profile and User Information'
@@ -218,8 +219,8 @@ paths:
     
     # edit profile
     put:
-      operationId: R109
-      summary: 'R109: Edit Profile Action'
+      operationId: R202
+      summary: 'R202: Edit Profile Action'
       description: 'Processes the new user edition form submission. Access: USR'
       tags:
         - 'M02: Profile and User Information'
@@ -243,9 +244,6 @@ paths:
                 picture:
                   type: string
                   format: binary
-                password:
-                  type: string
-                  format: password
 
       responses:
         '302':
@@ -261,3 +259,831 @@ paths:
                 302Failure:
                   description: 'Failed to edit user profile. Redirect to user profile.'
                   value: '/users/{id}'
+  #change user pwd
+  /users/{id}/change-password:
+    patch:
+      operationId: R203
+      summary: 'R203: Change Password Action'
+      description: 'Processes the change user password form submission. Access: USR'
+      tags:
+        - 'M02: Profile and User Information'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                oldPwd:
+                  type: string
+                  format: password
+                newPwd:
+                  type: string
+                  format: password
+              required:
+                - oldPwd
+                - newPwd  
+      responses:
+        '303':
+          description: 'Redirect after change password action.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirect to user profile'
+                  value: '/users/{id}'
+                303Error:
+                  description: 'Failed to change password. Redirect to edit page.'
+                  value: '/users/{id}/change-password'
+  #delete user
+  /users/{id}/delete:
+    patch:
+      operationId: R204
+      summary: 'R204: Delete user'
+      description: 'Delete user. Access: USR'
+      tags:
+        - 'M02: Profile and User Information'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+        '303':
+          description: 'Redirect after delete user action.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'successfully deleted user. Redirect to home page.'
+                  value: '/'
+                303Error:
+                  description: 'Failed to delete user. Redirect to delete user page.'
+                  value: '/users/{id}/delete'
+
+#------------------------------- Auctions -------------------------------
+
+  #view auction
+  /auctions:
+    get:
+      operationId: R301
+      summary: 'R301: Show auction listing'
+      description: 'Show the auction listings. Access: PUB'
+      tags:
+        - 'M03: Auction'
+
+      responses:
+        '200':
+          description: 'Ok. Show auctions'
+
+  #search auctions        
+  /api/auctions:
+    get:
+      operationId: R302
+      summary: 'R302: Search Auctions'
+      description: 'Show the auction search form. Access: PUB'
+      tags:
+        - 'M03: Auction'
+
+      parameters:
+        - in: query
+          name: query
+          description: Full-text search string
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: category
+          description: Category of the item
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: max_price
+          description: Max buyout price
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: min_price
+          description: Min buyout price
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: max_bid
+          description: Max bid price
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: min_bid
+          description: Min bid price
+          schema:
+            type: integer
+          required: false
+
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    time:
+                      type: string
+                      format: date-time
+                    bid:
+                      type: integer
+                    picture:
+                      type: string
+                      format: binary
+                    description:
+                      type: string
+
+  # view specific auction
+  /auctions/{id}: 
+    get:
+      operationId: R303
+      summary: 'R303: View Auction'
+      description: 'Show the individual auction. Access: PUB'
+      tags:
+        - 'M03: Auction'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show auction'
+        
+    delete:
+      operationId: R304
+      summary: 'R304: Delete Auction Action'
+      description: 'Processes the delete auction request. Access: OWN'
+      tags:
+        - 'M03: Auction'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '302':
+          description: 'Redirect after deleting auction.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully deleted auction. Redirecting to home page.'
+                  value: '/'
+                302Failure:
+                  description: 'Failed to delete auction. Redirect to auction page.'
+                  value: '/auctions/{id}'
+    put:
+      operationId: R305
+      summary: 'R305: Edit Auction Action'
+      description: 'Processes the auction edition form. Access: OWN'
+      tags:
+        - 'M03: Auction'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                auctionTitle:
+                  type: string
+                categories:
+                  type: array
+                  items:
+                    type: string
+                description:
+                  type: string
+                startTime:
+                  type: object
+                endTime:
+                  type: object
+                startingBid:
+                  type: integer
+                buyout:
+                  type: integer
+                pictures:
+                  type: array
+                  items:
+                    type: integer
+                    format: binary
+      responses:
+        '302':
+          description: 'Redirect after processing edit form.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully edited auction. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+                302Failure:
+                  description: 'Failed to edit auction. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+
+  /auctions/new-auction:
+    get:
+      operationId: R306
+      summary: 'R306: Create Auction'
+      description: 'View auction creation UI. Access: USR'
+      tags:
+        - 'M03: Auction'
+
+      responses:
+        '200':
+          description: 'Ok. Show auction creation UI'
+    
+    post:
+      operationId: R307
+      summary: 'R307: Create Auction Action'
+      description: 'Processes the new auction form submission. Access: USR'
+      tags:
+        - 'M03: Auction'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                auctionTitle:
+                  type: string
+                categories:
+                  type: array
+                  items:
+                    type: string
+                description:
+                  type: string
+                startTime:
+                  type: object
+                endTime:
+                  type: object
+                startingBid:
+                  type: integer
+                buyout:
+                  type: integer
+                pictures:
+                  type: array
+                  items:
+                    type: integer
+                    format: binary
+              required:
+                - auctionTitle
+                - categories
+                - description
+                - startTime
+                - endTime
+                - startingBid
+                - buyout
+                - pictures
+      responses:
+        '302':
+          description: 'Redirect after processing new auction form.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully created auction. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+                302Failure:
+                  description: 'Failed to create auction. Redirect to auction creation page.'
+                  value: '/auctions/new-auction'
+
+#------------------------------- User Interaction -------------------------------
+
+# add bid
+  /auctions/{id}/bids:
+    post:
+      operationId: R401
+      summary: 'R401: Add Bid to Auction Action'
+      description: 'Processes the add bid to auction request. Access: USR'
+      tags:
+        - 'M04: User Interaction'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                bid:
+                  type: number
+              required:
+              - bid
+      responses:
+        '302':
+          description: 'Redirect after bidding on auction.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully placed a bid. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+                302Failure:
+                  description: 'Failed to bid. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+
+  # add comment
+  /auctions/{id}/comments:
+    post:
+      operationId: R402
+      summary: 'R402: Add Comment to Auction Action'
+      description: 'Processes adding comment to auction request. Access: USR, OWN'
+      tags:
+        - 'M04: User Interaction'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+              required:
+              - comment
+      responses:
+        '302':
+          description: 'Redirect after processing comment request.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully commented on auction. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+                302Failure:
+                  description: 'Failed to comment on auction. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+  # follow auction
+  /auctions/{id}/follow:
+    post:
+      operationId: R403
+      summary: 'R403: Follow Auction Action'
+      description: 'Processes the auction follow request. Access: USR'
+      tags:
+        - 'M04: User Interaction'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '302':
+          description: 'Redirect after following.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully followed auction. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+                302Failure:
+                  description: 'Failed to follow auction. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+    delete:
+      operationId: R404
+      summary: 'R404: Unfollow Auction Action'
+      description: 'Processes the auction remove favourite request. Access: USR'
+      tags:
+        - 'M04: User Interaction'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '302':
+          description: 'Redirect after unfollowing auction.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully unfollowed auction. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+                302Failure:
+                  description: 'Failed to unfollow auction. Redirecting to auction page.'
+                  value: '/auctions/{id}'
+  #rate user
+  /users/{id}/rate:
+    post:
+      operationId: R405
+      summary: 'R405: Rate User Action'
+      description: 'Processes the rate user request. Access: USR'
+      tags:
+        - 'M04: User Interaction'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+              required:
+              - rating
+      responses:
+        '302':
+          description: 'Redirect after rating.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully rated user. Redirecting to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed to rate user. Redirecting to user profile.'
+                  value: '/users/{id}'
+
+    put:
+      operationId: R406
+      summary: 'R406: Edit User Rating Action'
+      description: 'Processes the rate user edit request. Access: USR'
+      tags:
+        - 'M04: User Interaction'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+              required:
+              - rating
+      responses:
+        '302':
+          description: 'Redirect after rating.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully updated rating. Redirecting to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed to update rating. Redirecting to user profile.'
+                  value: '/users/{id}'
+
+  /users/{id}/report:
+    post:
+      operationId: R407
+      summary: 'R407: Report User Action'
+      description: 'Processes the report user request. Access: USR'
+      tags:
+        - 'M04: User Interaction'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+              required:
+              - reason
+      responses:
+        '302':
+          description: 'Redirect after reporting.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully reported user. Redirecting to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed to report user. Redirecting to user profile.'
+                  value: '/users/{id}'
+
+#------------------------------- Listings -------------------------------
+  #show followed auctions
+  /users/{id}/followed:
+    get:
+      operationId: R501
+      summary: 'R501: List Followed Auctions'
+      description: 'Show the followed auctions listing. Access: USR'
+      tags:
+        - 'M05: Listings'
+
+      responses:
+        '200':
+          description: 'Ok. Show followed auctions'
+
+  #show auctions currently participating in (owner or bidding)
+  /users/{id}/current-auctions:
+    get:
+      operationId: R502
+      summary: 'R502: List Current Auctions'
+      description: 'Show the current auctions the user is participating in. Access: USR'
+      tags:
+        - 'M05: Listings'
+
+      responses:
+        '200':
+          description: 'Ok. Show current auctions'
+
+  #show past auctions the user bid on / boughtout 
+  /users/{id}/auction-history:
+    get:
+      operationId: R503
+      summary: 'R503: List Auction History'
+      description: 'Show the past auctions the user bid on / boughtout. Access: USR'
+      tags:
+        - 'M05: Listings'
+
+      responses:
+        '200':
+          description: 'Ok. Show auction history'
+
+  #show auctions the user owned/owns
+  /users/{id}/owned-auctions:
+    get:
+      operationId: R504
+      summary: 'R504: List Owned Auctions'
+      description: 'Show the auctions the user owns/owned. Access: USR'
+      tags:
+        - 'M05: Listings'
+
+      responses:
+        '200':
+          description: 'Ok. Show owned auctions'
+
+#------------------------------- User and auction administration -------------------------------
+
+  # admin page
+  /admin/{id}:
+   get:
+      operationId: R601
+      summary: 'R601: Admin Page'
+      description: 'Show the admin page. Access: ADM'
+      tags:
+        - 'M06: User and Auction Administration'
+
+      responses:
+        '200':
+          description: 'Ok. Show admin page'
+  #reports listing
+  /admin/{id}/reports:
+    get:
+      operationId: R602
+      summary: 'R602: List Reported Users'
+      description: 'Show the reported users. Access: ADM'
+      tags:
+        - 'M06: User and Auction Administration'
+
+      responses:
+        '200':
+          description: 'Ok. Show reported users listing'
+
+  /users/{id}/ban:
+    post:
+      operationId: R603
+      summary: 'R603: Ban User Action'
+      description: 'Processes the ban user request. Access: ADM'
+      tags:
+        - 'M06: User and Auction Administration'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+              required:
+              - reason
+      responses:
+        '302':
+          description: 'Redirect after banning.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully banned user. Redirecting to admin page.'
+                  value: '/admin/{id}'
+                302Failure:
+                  description: 'Failed to ban user. Redirecting to admin page.'
+                  value: '/admin/{id}'
+
+  /users/{id}/block:
+    post:
+      operationId: R604
+      summary: 'R604: Block User Action'
+      description: 'Processes the block user request. Access: ADM'
+      tags:
+        - 'M06: User and Auction Administration'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                endTime:
+                  type: object
+              required:
+              - reason
+              - endTime
+      responses:
+        '302':
+          description: 'Redirect after blocking.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully blocked user. Redirecting to admin page.'
+                  value: '/admin/{id}'
+                302Failure:
+                  description: 'Failed to block user. Redirecting to admin page.'
+                  value: '/admin/{id}'
+
+  /users/{id}/terminate:
+    post:
+      operationId: R605
+      summary: 'R605: Terminate Auction Action'
+      description: 'Processes the terminate auction request. Access: ADM'
+      tags:
+        - 'M06: User and Auction Administration'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+              required:
+              - reason
+      responses:
+        '302':
+          description: 'Redirect after terminating auction.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully terminated auction. Redirecting to admin page.'
+                  value: '/admin/{id}'
+                302Failure:
+                  description: 'Failed to terminate auction. Redirecting to admin page.'
+                  value: '/admin/{id}'
+
+#------------------------------- Static Pages -------------------------------
+
+ # about
+  /about:
+    get:
+      operationId: R701
+      summary: 'R701: About'
+      description: 'View the about page. Access: PUB'
+      tags:
+        - 'M07: Static Pages'
+
+      responses:
+        '200':
+          description: 'Ok. Show about page'
+          
+ # FAQ
+  /FAQ:
+    get:
+      operationId: R702
+      summary: 'R702: FAQ'
+      description: 'View the FAQ page. Access: PUB'
+      tags:
+        - 'M07: Static Pages'
+
+      responses:
+        '200':
+          description: 'Ok. Show FAQ page'
