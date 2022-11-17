@@ -1087,3 +1087,14 @@ paths:
       responses:
         '200':
           description: 'Ok. Show FAQ page'
+  /contact:
+    get:
+      operationId: R703
+      summary: 'R703: contact'
+      description: 'View the contact page. Access: PUB'
+      tags:
+        - 'M07: Static Pages'
+
+      responses:
+        '200':
+          description: 'Ok. Show contact page'
