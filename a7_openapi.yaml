@@ -27,14 +27,14 @@
     #login 
     /login:
       get:
-      operationId: R101
-      summary: 'R101: Login Form'
-      description: 'Provide login form. Access: PUB'
-      tags:
-        - 'M01: Authentication'
-      responses:
-        '200':
-          description: 'Ok. Show Log-q UI'
+        operationId: R101
+        summary: 'R101: Login Form'
+        description: 'Provide login form. Access: PUB'
+        tags:
+          - 'M01: Authentication'
+        responses:
+          '200':
+            description: 'Ok. Show Log-q UI'
 
       post:
         operationId: R102
