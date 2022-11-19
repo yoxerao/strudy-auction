@@ -125,8 +125,8 @@
                   email:
                     type: string
                   picture:
-                  type: string
-                  format: binary
+                    type: string
+                    format: binary
                   password:
                     type: string
                 required:
@@ -914,7 +914,7 @@
 
     # admin page
     /admin/{id}:
-    get:
+      get:
         operationId: R601
         summary: 'R601: Admin Page'
         description: 'Show the admin page. Access: ADM'
