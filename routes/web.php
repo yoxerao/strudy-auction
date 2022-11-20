@@ -33,3 +33,5 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
+Route::get('recovery', 'Auth\PasswordResetController@showSendLinkForm')->name('showLinkForm');
+Route::post('recovery', 'Auth\PasswordResetController@sendLink')->name('sendLink');
