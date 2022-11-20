@@ -11,7 +11,10 @@
 |
 */
 // Home
-Route::get('/', 'Auth\LoginController@home');
+Route::get('/', function (){
+    return view('app.blade.php');
+});
+
 
 // Cards
 Route::get('cards', 'CardController@list');
