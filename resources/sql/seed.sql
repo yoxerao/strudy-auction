@@ -329,6 +329,11 @@ CREATE TRIGGER notif_aucion
     FOR EACH ROW
     EXECUTE PROCEDURE notif_auction();
 
+--------------------------------------------------------------------------------
+
+                                -- Populate --
+
+--------------------------------------------------------------------------------
 
 insert into administrator (id, username, email, password, name) values (1, 'sbentson0', 'sbentson0@sun.com', 'tjdXVp2l', 'Sandra Bentson');
 
