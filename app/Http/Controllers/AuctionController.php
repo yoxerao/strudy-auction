@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Card;
+use App\Models\Auction;
 
-class CardController extends Controller
+class AuctionController extends Controller
 {
-    /**
+    /**php 
      * Shows the card for a given id.
      *
      * @param  int  $id
@@ -33,7 +33,7 @@ class CardController extends Controller
       if (!Auth::check()) return redirect('/login');
       $this->authorize('list', Auction::class);
       $auctions = Auth::user()->auctions()->orderBy('id')->get();
-      return view('pages.cards', ['auctions' => $auctions]);
+      return view('pages.auctions', ['auctions' => $auctions]); //criar auctions.blade.php em pages!!!
     }
 
     /**
