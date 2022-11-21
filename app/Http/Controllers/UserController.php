@@ -26,6 +26,6 @@ class UserController extends Controller
             'balance' => $user->balance,
         ];
 
-        return view('pages.profile', ['user' => $userInfo, 'id'=>$id]);
+        return view('pages.profile', ['user' => $userInfo]);
     }
 }
