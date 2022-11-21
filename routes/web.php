@@ -11,9 +11,7 @@
 |
 */
 // Home
-Route::get('/', function (){
-    return view('app.blade.php');
-});
+Route::get('/', 'Auth\LoginController@home');
 
 
 // Cards
@@ -35,3 +33,7 @@ Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('re
 Route::post('register', 'Auth\RegisterController@register');
 Route::get('recovery', 'Auth\PasswordResetController@showSendLinkForm')->name('showLinkForm');
 Route::post('recovery', 'Auth\PasswordResetController@sendLink')->name('sendLink');
+
+//User
+Route::get('user/{id}', 'UserController@show')->name('userProfile');
+
