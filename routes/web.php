@@ -11,9 +11,7 @@
 |
 */
 // Home
-Route::get('/', function (){
-    return view('app.blade.php');
-});
+Route::get('/', 'Auth\LoginController@home');
 
 
 // Cards
