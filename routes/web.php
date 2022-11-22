@@ -36,5 +36,8 @@ Route::post('recovery', 'Auth\PasswordResetController@sendLink')->name('sendLink
 
 //User
 Route::get('user/{id}', 'UserController@show')->name('userProfile');
-Route::get('user/{id}/edit', 'UserController@info_edit')->name('editUser');
+Route::get('user/{id}/edit', 'UserController@info_edit')->name('editUser'); // IMPORTANTE CRIAR POLICY PARA IMPEDIR EDIT SE NAO FOR AUTENTICADO OU ADMIN
 Route::put('user/{id}/edit', 'UserController@edit')->name('editProfile');
+
+//Search
+Route::get('search', 'SearchController@search')->name('search'); // por enquanto search é uma pagina à parte, futuramente podemos mudar a home page consoante a pesquisa
