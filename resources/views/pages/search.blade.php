@@ -11,8 +11,16 @@
         </form>
     </section>
     <section id="users">
-        @foreach($users as $user)
-            <h4><a href="/user/{{$user->id}}">{{$user->name}}</a></h4>
-        @endforeach
+        @if (count($users) > 0)
+            <h2>Users</h2>
+            <ul>
+                @foreach($users as $user)
+                    <h4><a href="/user/{{$user->id}}">{{$user->name}}</a></h4>
+                @endforeach
+            </ul>
+
+        @else
+            <h2>No users found</h2>
+        @endif
     </section>
 @endsection
