@@ -31,8 +31,8 @@ class AuctionController extends Controller
     public function list()
     {
       //if (!Auth::check()) return redirect('/login');
-      $this->authorize('list', Auction::class);
-      $auctions = Auth::user()->auctions()->orderBy('id')->get();
+      //$this->authorize('list', Auction::class);
+      $auctions = Auction::all();
       return view('pages.auctions', ['auctions' => $auctions]); //criar auctions.blade.php em pages!!!
     }
 

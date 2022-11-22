@@ -3,10 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+
+
 
 class Auction
 {
     use Notifiable;
+
+    protected $table = 'auction';
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;

@@ -21,6 +21,7 @@ Route::get('cards/{id}', 'CardController@show');
 // Auctions
 Route::get('auction/create', 'AuctionController@createForm')->name('createAuctionForm');
 Route::post('auction/create', 'AuctionController@create')->name('createAuction');
+Route::get('auctions', 'AuctionController@list');
 
 // API
 Route::put('api/cards', 'CardController@create');
