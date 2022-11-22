@@ -23,7 +23,7 @@
   <body>
     <main>
       <header>
-        <h1><a href="{{ url('/cards') }}">eAuction</a></h1>
+        <h1><a href="{{ url('/') }}">eAuction</a></h1>
         @if (Auth::check())
         <a class="button" href="{{ url('/logout') }}"> Logout </a>
         <a href="/user/{{ Auth::user()->id }}"> {{ Auth::user()->name }}</a>
