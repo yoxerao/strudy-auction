@@ -30,6 +30,7 @@ class User extends Authenticatable
         'password', 'remember_token', 
     ];
 
+    
     /**
      * The cards this user owns.
      */
