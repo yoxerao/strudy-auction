@@ -31,6 +31,30 @@ class UserController extends Controller
         return view('pages.profile', ['user' => $userInfo]);
     }
 
+    public function info_edit(int $id)
+    {
+        $user = User::find($id);
+        if (is_null($user))
+            return abort(404, 'User not found, id: ' . $id);
+
+        //$this->authorize('update', $user);
+
+        $userInfo = [
+            'id'=> $id,
+            'name'=> $user->name,
+            'email' => $user->email,
+            'username'=> $user->username,
+            'banned'=> $user->banned, 
+            'blocked'=> $user->blocked, 
+            'terminated'=> $user->terminated,
+            'rating' => $user->rating,
+            'balance' => $user->balance,
+            
+        ];
+
+        return view('pages.editProfile', ['user' => $userInfo]);
+    }
+
     public function edit(Request $request, int $id)
     {
         $user = User::find($id);
@@ -38,23 +62,19 @@ class UserController extends Controller
             return redirect()->back()->withErrors(['user' => 'User not found, id: ' . $id]);
         }
 
-        $this->authorize('update', $user);
+        //$this->authorize('update', $user);
 
-        $validator = Validator::make($request->all(), [
+        Validator::make($request->all(), [
             'name'=> 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'username'=> 'required|string|max:255|unique:users',
-            'password' => 'required_with:new_password,email|string|password',
-            'new_password' => 'nullable|string|min:6|confirmed',
+            'username' => 'required|string|max:255|unique:users',
         ]);
 
         if (isset($request->name)) $user->name = $request->name;
-        if (isset($request->email)) $user->email = $request->email;
-        if (isset($request->new_password)) $user->password = bcrypt($request->new_password);
+        if (isset($request->username)) $user->username = $request->username;
 
         $user->save();
 
-        return redirect("/user/{id}");
+        return redirect("/user/{$id}");
     }
 
 }

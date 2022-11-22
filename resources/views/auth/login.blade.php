@@ -29,6 +29,7 @@
     </button>
     <a class="button button-outline" href="{{ route('register') }}">Register</a>
     <a class="button button-outline" href="{{ route('showLinkForm') }}">Forgot Password</a>
+    
 </form>
 
 @endsection

@@ -36,4 +36,5 @@ Route::post('recovery', 'Auth\PasswordResetController@sendLink')->name('sendLink
 
 //User
 Route::get('user/{id}', 'UserController@show')->name('userProfile');
-Route::put('user/{id}', 'UserController@edit')->name('editProfile');
+Route::get('user/{id}/edit', 'UserController@info_edit')->name('editUser');
+Route::put('user/{id}/edit', 'UserController@edit')->name('editProfile');
