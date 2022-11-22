@@ -11,7 +11,7 @@
 |
 */
 // Home
-Route::get('/', 'Auth\LoginController@home');
+Route::get('/', 'HomeController@show')->name('homepage');
 
 
 // Cards
