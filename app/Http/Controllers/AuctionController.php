@@ -30,7 +30,7 @@ class AuctionController extends Controller
      */
     public function list()
     {
-      if (!Auth::check()) return redirect('/login');
+      //if (!Auth::check()) return redirect('/login');
       $this->authorize('list', Auction::class);
       $auctions = Auth::user()->auctions()->orderBy('id')->get();
       return view('pages.auctions', ['auctions' => $auctions]); //criar auctions.blade.php em pages!!!
@@ -47,11 +47,23 @@ class AuctionController extends Controller
 
       $this->authorize('create', $auction);
 
-      $auction->title = $request->input('title');
-      $auction->user_id = Auth::user()->id;
+      $auction->name = $request->input('name');
+      $auction->buyout_value = $request->input('buyout_value');
+      $auction->min_bid = $request->input('min_bid');
+      $auction->description = $request->input('description');
+      $auction->start_date = $request->input('start_date');
+      $auction->end_date = $request->input('end_date');
+      $auction->winner = null;
+      $auction->owner = Auth::user()->id;
       $auction->save();
 
       return $auction;
+    }
+
+    public function createForm()
+    {
+
+      return view('pages.auction');
     }
 
     public function delete(Request $request, $id)

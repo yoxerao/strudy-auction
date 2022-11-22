@@ -18,6 +18,10 @@ Route::get('/', 'HomeController@show')->name('homepage');
 Route::get('cards', 'CardController@list');
 Route::get('cards/{id}', 'CardController@show');
 
+// Auctions
+Route::get('auction/create', 'AuctionController@createForm')->name('createAuctionForm');
+Route::post('auction/create', 'AuctionController@create')->name('createAuction');
+
 // API
 Route::put('api/cards', 'CardController@create');
 Route::delete('api/cards/{card_id}', 'CardController@delete');
