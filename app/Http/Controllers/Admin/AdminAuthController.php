@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -26,8 +27,8 @@ class AdminAuthController extends Controller
 
         if(auth()->guard('admin')->attempt(['username' => $request->input('username'),  'password' => $request->input('password')])){
            // $user = auth()->guard('admin')->user();
-            
-            return redirect()->route('adminDashboard')->with('success','You were Logged in sucessfully.');
+            $users = User::all();
+            return redirect()->route('adminDashboard')->with('success','You were Logged in sucessfully.','users',$users);
             
         }else {
             return back()->with('error','Whoops! invalid username and password.');
