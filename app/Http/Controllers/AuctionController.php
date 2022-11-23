@@ -95,4 +95,24 @@ class AuctionController extends Controller
 
       return redirect("/auctions")->with('success', 'Auction is successfully deleted');
     }
+  
+
+  public function show_my(int $id)
+  {
+    $auction = Auction::find($id);
+
+    $auctionInfo = [
+      'id' => $auction->id,
+      'name' => $auction->name,
+      'buyout_value' => $auction->buyout_value,
+      'min_bid' => $auction->min_bid,
+      'description' => $auction->description,
+      'start_date' => $auction->start_date,
+      'end_date' => $auction->end_date,
+      'owner' => $auction->owner,
+    ];
+
+    return view('pages.myAuctions', ['auctions' => $auctionInfo]);
+    
+  }
 }
