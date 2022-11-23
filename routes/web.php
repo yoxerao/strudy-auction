@@ -22,6 +22,7 @@ Route::get('cards/{id}', 'CardController@show');
 Route::get('auction/create', 'AuctionController@createForm')->name('createAuctionForm');
 Route::post('auction/create', 'AuctionController@create')->name('createAuction');
 Route::get('auctions', 'AuctionController@list');
+Route::get('auctions/{id}', 'AuctionController@show_my')->name('showMyAuction');
 
 // Bid
 Route::get('bid/makeBidForm/{id}', 'BidController@makeBidForm')->name('makeBidForm');
