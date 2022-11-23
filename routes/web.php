@@ -47,3 +47,8 @@ Route::post('recovery', 'Auth\PasswordResetController@sendLink')->name('sendLink
 Route::get('user/{id}', 'UserController@show')->name('userProfile');
 Route::get('user/{id}/edit', 'UserController@info_edit')->name('editUser');
 Route::put('user/{id}/edit', 'UserController@edit')->name('editProfile');
+Route::get('user/{id}/bidding-history', 'UserController@biddingHistory')->name('biddingHistory');
+Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ownedAuctions');
+
+//Search
+Route::get('search', 'SearchController@search')->name('search'); // por enquanto search é uma pagina à parte, futuramente podemos mudar a home page consoante a pesquisa

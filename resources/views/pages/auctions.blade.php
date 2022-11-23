@@ -5,6 +5,15 @@
 @section('content')
 
 <section id="auctions">
+
+    <section id="search-bar">
+    <form class="form-inline my-2 my-lg-0" method="get" action="{{route('search')}}">
+        <input class="form-control mr-sm-2" name = "query" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    </section>
+    
+    <section id="list-auctions">
     @foreach ($auctions as $auction)
         <article class="auction">
             <h1>{{ $auction->name }}</h1>
@@ -17,6 +26,9 @@
             <p>Owner: {{ $auction->owner }}</p>
         </article>
     @endforeach
+    </section>
+    
+
 </section>
 
 @endsection
