@@ -23,6 +23,10 @@ Route::get('auction/create', 'AuctionController@createForm')->name('createAuctio
 Route::post('auction/create', 'AuctionController@create')->name('createAuction');
 Route::get('auctions', 'AuctionController@list');
 
+// Bid
+Route::get('bid/makeBidForm/{id}', 'BidController@makeBidForm')->name('makeBidForm');
+Route::post('bid/makeBid/{id}', 'BidController@makeBid')->name('makeBid');
+
 // API
 Route::put('api/cards', 'CardController@create');
 Route::delete('api/cards/{card_id}', 'CardController@delete');

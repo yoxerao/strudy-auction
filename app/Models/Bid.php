@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
 
-class Auction
+class Bid extends Model
 {
-    use Notifiable;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'bid';
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;

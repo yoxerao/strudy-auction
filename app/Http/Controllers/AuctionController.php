@@ -37,15 +37,13 @@ class AuctionController extends Controller
     }
 
     /**
-     * Creates a new card.
+     * Creates a new auction.
      *
-     * @return Card The card created.
+     * @return Auction The auction created.
      */
     public function create(Request $request)
     {
       $auction = new Auction();
-
-      $this->authorize('create', $auction);
 
       $auction->name = $request->input('name');
       $auction->buyout_value = $request->input('buyout_value');
@@ -57,7 +55,7 @@ class AuctionController extends Controller
       $auction->owner = Auth::user()->id;
       $auction->save();
 
-      return $auction;
+      return redirect("/");
     }
 
     public function createForm()

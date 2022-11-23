@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
-
-
-class Auction
+class Auction extends Model
 {
-    use Notifiable;
-
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'auction';
 
     // Don't add create and update timestamps in database.
@@ -24,6 +24,10 @@ class Auction
     protected $fillable = [
         'name', 'buyout_value', 'min_bid', 'description', 'start_date', 'end_date', 'winner', 'owner',   
     ];
+
+    public function user() {
+        return $this->belongsTo('App\Models\User');
+      }
 
     /**
      * The cards this user owns.
