@@ -46,3 +46,5 @@ Route::get('admin/{id}', 'AdminController@show')->name('adminProfile');
 
 //Search
 Route::get('search', 'SearchController@search')->name('search'); // por enquanto search é uma pagina à parte, futuramente podemos mudar a home page consoante a pesquisa
+
+ Route::get('erro', )->name('Error');

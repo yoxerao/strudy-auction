@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -38,7 +39,7 @@ class UserController extends Controller
         if (is_null($user))
             return abort(404, 'User not found, id: ' . $id);
 
-        //$this->authorize('update', $user);
+        $this->authorize('update', $user);
 
         $userInfo = [
             'id'=> $id,
@@ -63,7 +64,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors(['user' => 'User not found, id: ' . $id]);
         }
 
-        //$this->authorize('update', $user);
+        $this->authorize('update', $user);
 
         Validator::make($request->all(), [
             'name'=> 'required|string|max:255',
@@ -84,7 +85,7 @@ class UserController extends Controller
         if (is_null($user))
             return abort(404, 'User not found, id: ' . $id);
 
-        //$this->authorize('update', $user);
+        $this->authorize('update', $user);
 
         $userInfo = [
             'id'=> $id,
@@ -100,7 +101,7 @@ class UserController extends Controller
             return redirect()->back()->withErrors(['user' => 'User not found, id: ' . $id]);
         }
 
-        //$this->authorize('update', $user);
+        $this->authorize('update', $user);
 
         Validator::make($request->all(), [
             'New Password'=>'required|string|max:255',
