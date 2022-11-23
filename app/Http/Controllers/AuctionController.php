@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Auction;
+use App\Models\Bid;
 
 class AuctionController extends Controller
 {
@@ -22,6 +23,7 @@ class AuctionController extends Controller
       $this->authorize('show', $auction);
       return view('pages.auction', ['auction' => $auction]);
     }
+
     /**
      * Shows all cards.
      *
@@ -30,7 +32,7 @@ class AuctionController extends Controller
     public function list()
     {
       //if (!Auth::check()) return redirect('/login');
-    
+      //$this->authorize('list', Auction::class);
       $auctions = Auction::all();
       return view('pages.auctions', ['auctions' => $auctions]); //criar auctions.blade.php em pages!!!
     }
@@ -54,22 +56,43 @@ class AuctionController extends Controller
       $auction->owner = Auth::user()->id;
       $auction->save();
 
-      return redirect("/");
+      return redirect("/auctions");
     }
 
     public function createForm()
     {
 
-      return view('pages.auction');
+      return view('pages.auctionCreate');
+    }
+
+    public function edit(Request $request, $id)
+    {
+      $auction =  Auction::find($id);
+
+      $auction->name = $request->input('name');
+      $auction->description = $request->input('description');
+      $auction->save();
+
+      return redirect("/auctions");
+    }
+
+    public function editForm($id)
+    {
+      $auction =  Auction::find($id);
+      return view('pages.auctionEdit', ['auction' => $auction]);
     }
 
     public function delete(Request $request, $id)
     {
-      $auction =  Auction::find($id);
 
-      $this->authorize('delete', $auction);
+      $bid =  Bid::where('id_auction', '=', $id)->first();
+      if($bid) {
+        return redirect("/auctions")->with('error', 'Auction cannot be deleted');
+      }
+
+      $auction =  Auction::find($id);
       $auction->delete();
 
-      return $auction;
+      return redirect("/auctions")->with('success', 'Auction is successfully deleted');
     }
 }

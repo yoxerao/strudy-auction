@@ -15,7 +15,7 @@
     @endif
 
     <label for="buyout_value">Buyout Value</label>
-    <input id="buyout_value" type="number" name="buyout_value" value="{{ old('buyout_value') }}" required>
+    <input id="buyout_value" type="number" step=0.01 name="buyout_value" value="{{ old('buyout_value') }}" required>
     @if ($errors->has('buyout_value'))
       <span class="error">
           {{ $errors->first('buyout_value') }}
@@ -23,7 +23,7 @@
     @endif
 
     <label for="min_bid">Minimum Bid</label>
-    <input id="min_bid" type="number" name="min_bid" value="{{ old('min_bid') }}" required>
+    <input id="min_bid" type="number" step=0.01 name="min_bid" value="{{ old('min_bid') }}" required>
     @if ($errors->has('min_bid'))
       <span class="error">
           {{ $errors->first('min_bid') }}

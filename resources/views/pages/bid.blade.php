@@ -7,7 +7,7 @@
     {{ csrf_field() }}
 
     <label for="value">Value</label>
-    <input id="value" type="number" name="value" value="{{ old('value') }}" required>
+    <input id="value" type="number" step=0.01 name="value" value="{{ old('value') }}" required>
     @if ($errors->has('value'))
       <span class="error">
           {{ $errors->first('value') }}

@@ -31,7 +31,7 @@ class BidController extends Controller
       $bid->id_auction = $id;
       $bid->save();
 
-      return redirect("/");
+      return redirect("/auctions");
     }
 
     public function makeBidForm($id)
