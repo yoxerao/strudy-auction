@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -10,7 +13,7 @@ class AdminController extends Controller
     {
         $admin = Admin::find($id);
         if (is_null($admin))
-            return abort(404, 'User not found');
+            return abort(404, 'Admin not found');
         
         $adminInfo =[
             'id'=> $id,

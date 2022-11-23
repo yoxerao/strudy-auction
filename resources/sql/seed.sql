@@ -335,7 +335,7 @@ CREATE TRIGGER notif_aucion
 
 --------------------------------------------------------------------------------
 
-insert into administrator (username, email, password, name) values ('sbentson0', 'sbentson0@sun.com', 'tjdXVp2l', 'Sandra Bentson');
+insert into administrator (username, email, password, name) values ('sbentson0', 'sbentson0@sun.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 'Sandra Bentson');
 
 insert into users (balance, rating, blocked, banned, terminated, username, email, password, name) values (2828.88, 2.42, false, false, false, 'lkrebs0', 'lkrebs0@comsenz.com', 'KJH6ZuMqThbV', 'Lilly Krebs');
 insert into users (balance, rating, blocked, banned, terminated, username, email, password, name) values (8004.5, null, true, true, false, 'rscoines1', 'rscoines1@blogger.com', '5KnFC0qwFS', 'Russ Scoines');

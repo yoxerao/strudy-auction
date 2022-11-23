@@ -27,6 +27,7 @@
     <button type="submit">
         Login
     </button>
+    <a class="button button-outline" href="{{ route('adminLogin') }}">Login as Admin</a>
     <a class="button button-outline" href="{{ route('register') }}">Register</a>
     <a class="button button-outline" href="{{ route('showLinkForm') }}">Forgot Password</a>
     

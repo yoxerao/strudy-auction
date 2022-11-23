@@ -40,7 +40,20 @@ Route::get('user/{id}/edit', 'UserController@info_edit')->name('editUser'); // I
 Route::put('user/{id}/edit', 'UserController@edit')->name('editProfile');
 
 //Admin
-Route::get('admin/{id}', 'AdminController@show')->name('adminProfile');
 
 //Search
 Route::get('search', 'SearchController@search')->name('search'); // por enquanto search é uma pagina à parte, futuramente podemos mudar a home page consoante a pesquisa
+
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/login', 'Admin\AdminAuthController@getLogin')->name('adminLogin');
+    Route::post('/login', 'Admin\AdminAuthController@postLogin')->name('adminLoginPost');
+    Route::get('{id}', 'Admin\AdminController@show')->name('adminProfile');
+
+
+    Route::group(['middleware' => 'adminauth'], function () {
+        Route::get('/', function () {
+            return view('pages.adminHome');
+        })->name('adminDashboard');
+ 
+    });
+});
