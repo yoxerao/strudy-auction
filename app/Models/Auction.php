@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 
 
-class Auction
+class Auction extends Model
 {
     use Notifiable;
 

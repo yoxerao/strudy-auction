@@ -16,6 +16,7 @@
             <p>Winner: {{ $auction->winner }}</p>
             <p>Owner: {{ $auction->owner }}</p>
         </article>
+    @endforeach
 </section>
 
 @endsection
