@@ -11,6 +11,7 @@
     <h4 class="text-center">balance: {{ $user['balance'] }}</h4>
     
     <a class="button button-outline" href="{{ route('editUser', ['id' => $user['id']]) }}">Edit profile</a>
+    <a class="button button-outline" href="{{ route('editPass', ['id' => $user['id']]) }}">Change password</a>
 
 </section>
 @endsection

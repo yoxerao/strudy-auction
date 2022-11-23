@@ -38,6 +38,8 @@ Route::post('recovery', 'Auth\PasswordResetController@sendLink')->name('sendLink
 Route::get('user/{id}', 'UserController@show')->name('userProfile');
 Route::get('user/{id}/edit', 'UserController@info_edit')->name('editUser'); // IMPORTANTE CRIAR POLICY PARA IMPEDIR EDIT SE NAO FOR AUTENTICADO OU ADMIN
 Route::put('user/{id}/edit', 'UserController@edit')->name('editProfile');
+Route::get('user/{id}/editpass', 'UserController@info_edit_pass')->name('editPass_info');
+Route::put('user/{id}/editpass', 'UserController@edit_pass')->name('editPass'); // IMPORTANTE CRIAR POLICY PARA IMPEDIR EDIT SE NAO FOR AUTENTICADO
 
 //Admin
 
@@ -57,3 +59,5 @@ Route::group(['prefix' => 'admin'], function () {
  
     });
 });
+
+Route::get('erro', )->name('Error');
