@@ -216,7 +216,8 @@
         responses:
           '200':
             description: 'Ok. Show user profile.'
-      
+
+    /users/{id}/edit:
       # edit profile
       put:
         operationId: R202

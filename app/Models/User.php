@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'balance', 'rating', 'banned', 'blocked', 'terminated', 'username', 'email', 'password', 'name',   
     ];
 
     /**
@@ -27,13 +27,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 
     ];
 
+    
     /**
      * The cards this user owns.
      */
-     public function cards() {
-      return $this->hasMany('App\Models\Card');
-    }
+    # public function cards() {
+    #  return $this->hasMany('App\Models\Card');
+    #}
 }

@@ -23,9 +23,16 @@
   <body>
     <main>
       <header>
-        <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
-        @if (Auth::check())
-        <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
+        <h1><a href="{{ url('/') }}">eAuction</a></h1>
+        @if (Auth::guard('admin')->check())
+        <a class="button" href="{{ url('/logout') }}"> Logout </a>
+        <a href="/user/{{ Auth::guard('admin')->user()->id }}"> {{ Auth::guard('admin')->user()->name }}</a>
+        @elseif (Auth::check())
+        <a class="button" href="{{ url('/logout') }}"> Logout </a>
+        <a href="/user/{{ Auth::user()->id }}"> {{ Auth::user()->name }}</a>
+        @else
+        <a class="button" href="{{ url('/login') }}"> Login </a>
+        <a class="button" href="{{ url('/register') }}"> Register </a>
         @endif
       </header>
       <section id="content">

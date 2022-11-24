@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,7 +12,8 @@
 |
 */
 // Home
-Route::get('/', 'Auth\LoginController@home');
+Route::get('/', 'HomeController@show')->name('homepage');
+
 
 // Cards
 Route::get('cards', 'CardController@list');
@@ -30,3 +32,33 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
+Route::get('recovery', 'Auth\PasswordResetController@showSendLinkForm')->name('showLinkForm');
+Route::post('recovery', 'Auth\PasswordResetController@sendLink')->name('sendLink');
+
+//User
+Route::get('user/{id}', 'UserController@show')->name('userProfile');
+Route::get('user/{id}/edit', 'UserController@info_edit')->name('editUser'); // IMPORTANTE CRIAR POLICY PARA IMPEDIR EDIT SE NAO FOR AUTENTICADO OU ADMIN
+Route::put('user/{id}/edit', 'UserController@edit')->name('editProfile');
+Route::get('user/{id}/editpass', 'UserController@info_edit_pass')->name('editPass_info');
+Route::put('user/{id}/editpass', 'UserController@edit_pass')->name('editPass'); // IMPORTANTE CRIAR POLICY PARA IMPEDIR EDIT SE NAO FOR AUTENTICADO
+
+//Admin
+
+//Search
+Route::get('search', 'SearchController@search')->name('search'); // por enquanto search é uma pagina à parte, futuramente podemos mudar a home page consoante a pesquisa
+
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/login', 'Admin\AdminAuthController@getLogin')->name('adminLogin');
+    Route::post('/login', 'Admin\AdminAuthController@postLogin')->name('adminLoginPost');
+    Route::get('{id}', 'Admin\AdminController@show')->name('adminProfile');
+
+
+    Route::group(['middleware' => 'adminauth'], function () {
+        Route::get('/', function () {
+            return view('pages.adminHome')->with('users', User::all());
+        })->name('adminDashboard');
+ 
+    });
+});
+
+Route::get('erro', )->name('Error');
