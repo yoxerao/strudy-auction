@@ -22,7 +22,7 @@ class Auction extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'buyout_value', 'min_bid', 'description', 'start_date', 'end_date', 'winner', 'owner',   
+        'name', 'buyout_value', 'min_bid', 'description', 'start_date', 'end_date', 'winner', 'user_id',   
     ];
 
     public function user() {

@@ -27,7 +27,7 @@
             <p>Start Date: {{ $auction->start_date }}</p>
             <p>End Date: {{ $auction->end_date }}</p>
             <p>Winner: {{ $auction->winner }}</p>
-            <p>Owner: {{ $auction->owner }}</p>
+            <p>Owner: {{ $auction->user_id }}</p>
             <a href="/auction/edit/{{ $auction->id }}">
                 <button> Edit or Delete Auction </button>
             </a>

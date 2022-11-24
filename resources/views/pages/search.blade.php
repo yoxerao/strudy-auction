@@ -28,7 +28,7 @@
             <h2>Auctions</h2>
             <ul>
                 @foreach($auctions as $auction)
-                    <h4><a href="/auction/{{$auction->id}}">{{$auction->name}}</a></h4>
+                    <h4><a href="/auctions">{{$auction->name}}</a></h4>
                 @endforeach
             </ul>
 

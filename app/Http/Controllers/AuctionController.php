@@ -53,7 +53,7 @@ class AuctionController extends Controller
       $auction->start_date = $request->input('start_date');
       $auction->end_date = $request->input('end_date');
       $auction->winner = null;
-      $auction->owner = Auth::user()->id;
+      $auction->user_id = Auth::user()->id;
       $auction->save();
 
       return redirect("/auctions");
@@ -109,7 +109,7 @@ class AuctionController extends Controller
       'description' => $auction->description,
       'start_date' => $auction->start_date,
       'end_date' => $auction->end_date,
-      'owner' => $auction->owner,
+      'user_id' => $auction->user_id,
     ];
 
     return view('pages.myAuctions', ['auctions' => $auctionInfo]);

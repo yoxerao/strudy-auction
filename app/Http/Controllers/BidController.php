@@ -27,7 +27,7 @@ class BidController extends Controller
       $bid->value = $request->input('value');
       $bid->date = $dt->format('Y-m-d H:i:s');
       $bid->winner = false;
-      $bid->bidder = Auth::user()->id;
+      $bid->user_id = Auth::user()->id;
       $bid->id_auction = $id;
       $bid->save();
 
