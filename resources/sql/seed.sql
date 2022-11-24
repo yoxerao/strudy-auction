@@ -37,7 +37,7 @@ CREATE TABLE auction (
     start_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     end_date TIMESTAMP WITH TIME ZONE NOT NULL,
     winner INTEGER REFERENCES users (id) ON UPDATE CASCADE,
-    owner INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE
+    user_id INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE
 );
 
 
@@ -54,7 +54,7 @@ CREATE TABLE bid (
     value NUMERIC NOT NULL,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     winner BOOLEAN NOT NULL DEFAULT FALSE,
-    bidder INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE,
     id_auction INTEGER NOT NULL REFERENCES auction (id) ON UPDATE CASCADE
 );
 
@@ -156,7 +156,7 @@ CREATE TABLE user_follow_auction (
 
 --------------------------------------------------------------------------------
 
-CREATE INDEX auction_owner ON auction USING btree (owner);
+CREATE INDEX auction_owner ON auction USING btree (user_id);
 CLUSTER auction USING auction_owner;
 
 CREATE INDEX auction_winner ON auction USING hash (winner);
@@ -246,9 +246,9 @@ CREATE TRIGGER is_banned
 
 CREATE FUNCTION notif_bid() RETURNS TRIGGER AS 
 $BODY$
-DECLARE id_owner INTEGER = (SELECT owner FROM auction WHERE NEW.id_auction=auction.id);
+DECLARE id_owner INTEGER = (SELECT user_id FROM auction WHERE NEW.id_auction=auction.id);
 DECLARE max_val NUMERIC = (SELECT max(value) FROM bid WHERE NEW.id_auction=bid.id_auction AND value NOT IN (SELECT max(value) FROM bid WHERE NEW.id_auction=bid.id_auction));
-DECLARE id_bidder INTEGER = (SELECT bidder FROM bid WHERE NEW.id_auction=bid.id_auction AND value = max_val);
+DECLARE id_bidder INTEGER = (SELECT user_id FROM bid WHERE NEW.id_auction=bid.id_auction AND value = max_val);
 DECLARE notif_id INTEGER;
 DECLARE notif_id2 INTEGER;
 DECLARE text1 TEXT = 'Your auction ' || NEW.id_auction || ' has recieved a new bid!'; -- mudar para titulo da auction
@@ -292,7 +292,7 @@ CREATE TRIGGER notif_bid
 
 CREATE FUNCTION notif_auction() RETURNS TRIGGER AS 
 $BODY$
-DECLARE id_owner INTEGER = (SELECT owner FROM auction WHERE NEW.id_auction=auction.id);
+DECLARE id_owner INTEGER = (SELECT user_id FROM auction WHERE NEW.id_auction=auction.id);
 DECLARE winner INTEGER = (SELECT winner FROM auction WHERE NEW.id_auction=auction.id);
 DECLARE notif_id INTEGER;
 DECLARE notif_id2 INTEGER;
@@ -340,14 +340,14 @@ insert into administrator (username, email, password, name) values ('sbentson0',
 insert into users (balance, rating, blocked, banned, terminated, username, email, password, name) values (2828.88, 2.42, false, false, false, 'lkrebs0', 'lkrebs0@comsenz.com', 'KJH6ZuMqThbV', 'Lilly Krebs');
 insert into users (balance, rating, blocked, banned, terminated, username, email, password, name) values (8004.5, null, true, true, false, 'rscoines1', 'rscoines1@blogger.com', '5KnFC0qwFS', 'Russ Scoines');
 
-insert into auction (name, buyout_value, min_bid, description, start_date, end_date, winner, owner) values ('mock item 1', 701.31, 81.42, 'This is an item description', '2022-10-30', '2022-11-01', null, 1);
+insert into auction (name, buyout_value, min_bid, description, start_date, end_date, winner, user_id) values ('mock item 1', 701.31, 81.42, 'This is an item description', '2022-10-30', '2022-11-01', null, 1);
 
 insert into image (path_name, id_auction, id_user) values ('http://dummyimage.com/210x249.png/5fa2dd/ffffff', 1, null);
 insert into image (path_name, id_auction, id_user) values ('http://dummyimage.com/102x186.png/5fa2dd/ffffff', null, 1);
 insert into image (path_name, id_auction, id_user) values ('http://dummyimage.com/181x156.png/ff4444/ffffff', null, 2);
 
-insert into bid (value, date, winner, bidder, id_auction) values (40.67, '2022-10-30', false, 1, 1);
-insert into bid (value, date, winner, bidder, id_auction) values (99.72, '2022-10-30', false, 2, 1);
+insert into bid (value, date, winner, user_id, id_auction) values (40.67, '2022-10-30', false, 1, 1);
+insert into bid (value, date, winner, user_id, id_auction) values (99.72, '2022-10-30', false, 2, 1);
 
 insert into deposit (value, date, author) values (61.19, '2022-10-15', 2);
 insert into deposit (value, date, author) values (500.87, '2022-10-27', 1);

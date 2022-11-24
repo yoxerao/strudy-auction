@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bid;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -75,6 +76,30 @@ class UserController extends Controller
         $user->save();
 
         return redirect("/user/{$id}");
+    }
+
+    public function biddingHistory(int $id)
+    {
+        $user = User::find($id);
+        if (is_null($user)){
+            return abort(404, 'User not found id:'. $id);
+        }
+
+        $bids = $user->bids;
+
+        return view('pages.biddingHistory', compact('bids'));
+    }
+
+    public function ownedAuctions(int $id)
+    {
+        $user = User::find($id);
+        if (is_null($user)){
+            return abort(404, 'User not found id:'. $id);
+        }
+
+        $auctions = $user->auctions;
+
+        return view('pages.ownedAuctions', compact('auctions'));
     }
 
 }
