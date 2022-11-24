@@ -16,8 +16,8 @@ Route::get('/', 'HomeController@show')->name('homepage');
 
 
 // Cards
-Route::get('cards', 'CardController@list');
-Route::get('cards/{id}', 'CardController@show');
+//Route::get('cards', 'CardController@list');
+//Route::get('cards/{id}', 'CardController@show');
 
 // Auctions
 Route::get('auction/create', 'AuctionController@createForm')->name('createAuctionForm');
