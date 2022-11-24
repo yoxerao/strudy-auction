@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -59,24 +60,30 @@ class UserController extends Controller
 
     public function edit(Request $request, int $id)
     {
+        
         $user = User::find($id);
         if (is_null($user)){
             return redirect()->back()->withErrors(['user' => 'User not found, id: ' . $id]);
         }
+        
+        if($request->user()->can('update', $user)){
+            $this->authorize('update', $user);
 
-        $this->authorize('update', $user);
+            Validator::make($request->all(), [
+                'name'=> 'required|string|max:255',
+                'username' => 'required|string|max:255|unique:users',
+            ]);
 
-        Validator::make($request->all(), [
-            'name'=> 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users',
-        ]);
+            if (isset($request->name)) $user->name = $request->name;
+            if (isset($request->username)) $user->username = $request->username;
 
-        if (isset($request->name)) $user->name = $request->name;
-        if (isset($request->username)) $user->username = $request->username;
+            $user->save();
 
-        $user->save();
-
-        return redirect("/user/{$id}");
+            return redirect("/user/{$id}");
+        }
+        else{
+            return redirect()->back()->withErrors(['user' => 'You are not authorized to edit this user']);
+        }
     }
 
     public function info_edit_pass(int $id)

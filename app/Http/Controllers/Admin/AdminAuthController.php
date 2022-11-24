@@ -27,8 +27,7 @@ class AdminAuthController extends Controller
 
         if(auth()->guard('admin')->attempt(['username' => $request->input('username'),  'password' => $request->input('password')])){
            // $user = auth()->guard('admin')->user();
-            $users = User::all();
-            return redirect()->route('adminDashboard')->with('success','You were Logged in sucessfully.','users',$users);
+            return redirect()->route('adminDashboard')->with('success','You were Logged in sucessfully.');
             
         }else {
             return back()->with('error','Whoops! invalid username and password.');

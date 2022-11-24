@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -54,7 +55,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::group(['middleware' => 'adminauth'], function () {
         Route::get('/', function () {
-            return view('pages.adminHome');
+            return view('pages.adminHome')->with('users', User::all());
         })->name('adminDashboard');
  
     });
