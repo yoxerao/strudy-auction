@@ -19,6 +19,19 @@ Route::get('/', 'HomeController@show')->name('homepage');
 Route::get('cards', 'CardController@list');
 Route::get('cards/{id}', 'CardController@show');
 
+// Auctions
+Route::get('auction/create', 'AuctionController@createForm')->name('createAuctionForm');
+Route::post('auction/create', 'AuctionController@create')->name('createAuction');
+Route::get('auctions', 'AuctionController@list');
+Route::get('auction/edit/{id}', 'AuctionController@editForm')->name('editAuctionForm');
+Route::put('auction/edit/{id}', 'AuctionController@edit')->name('editAuction');
+Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction');
+Route::get('auctions/{id}', 'AuctionController@show_my')->name('showMyAuction');
+
+// Bid
+Route::get('bid/makeBid/{id}', 'BidController@makeBidForm')->name('makeBidForm');
+Route::post('bid/makeBid/{id}', 'BidController@makeBid')->name('makeBid');
+
 // API
 /*Route::put('api/cards', 'CardController@create');
 Route::delete('api/cards/{card_id}', 'CardController@delete');
@@ -43,8 +56,6 @@ Route::get('user/{id}/editpass', 'UserController@info_edit_pass')->name('editPas
 Route::put('user/{id}/editpass', 'UserController@edit_pass')->name('editPass'); // IMPORTANTE CRIAR POLICY PARA IMPEDIR EDIT SE NAO FOR AUTENTICADO
 
 //Admin
-
-//Search
 Route::get('search', 'SearchController@search')->name('search'); // por enquanto search é uma pagina à parte, futuramente podemos mudar a home page consoante a pesquisa
 
 Route::group(['prefix' => 'admin'], function () {
@@ -57,8 +68,15 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/', function () {
             return view('pages.adminHome')->with('users', User::all());
         })->name('adminDashboard');
- 
     });
 });
+
+//listings
+Route::get('user/{id}/bidding-history', 'UserController@biddingHistory')->name('biddingHistory');
+Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ownedAuctions');
+
+
+
+
 
 //Route::get('erro')->name('Error');

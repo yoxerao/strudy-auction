@@ -23,4 +23,17 @@
             <h2>No users found</h2>
         @endif
     </section>
+    <section id="auctions">
+        @if (count($auctions) > 0)
+            <h2>Auctions</h2>
+            <ul>
+                @foreach($auctions as $auction)
+                    <h4><a href="/auction/{{$auction->id}}">{{$auction->name}}</a></h4>
+                @endforeach
+            </ul>
+
+        @else
+            <h2>No auctions found</h2>
+        @endif
+    </section>
 @endsection
