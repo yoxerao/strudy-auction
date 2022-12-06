@@ -5,8 +5,6 @@ DROP SCHEMA IF EXISTS lbaw22121 CASCADE;
 CREATE SCHEMA lbaw22121;
 
 
-
-
 CREATE TABLE administrator (
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL CONSTRAINT administrator_username_uk UNIQUE,
@@ -65,8 +63,6 @@ CREATE TABLE deposit (
     author INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE
 );
 
-
-
 CREATE TABLE rates (
     rating INTEGER NOT NULL CONSTRAINT user_rate_ck CHECK ((rating = 0) OR (rating = 1) OR (rating = 2) OR (rating = 3) OR (rating = 4) OR (rating = 5)), 
     id_rater INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE,
@@ -78,13 +74,8 @@ CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
     content TEXT NOT NULL,
     creation_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    seen BOOLEAN NOT NULL
-);
-
-CREATE TABLE user_notification (
-    id_user INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE,
-    id_notification INTEGER NOT NULL REFERENCES notification (id) ON UPDATE CASCADE,
-    PRIMARY KEY (id_user, id_notification) 
+    seen BOOLEAN NOT NULL, 
+    id_user INTEGER NOT NULL REFERENCES user (id) ON UPDATE CASCADE
 );
 
 CREATE TABLE new_bid(
