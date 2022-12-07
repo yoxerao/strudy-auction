@@ -39,5 +39,10 @@
         @yield('content')
       </section>
     </main>
+
+    <footer style="text-align:center;">
+      <a class="button" href="{{ url('/about') }}"> About us </a>
+      <a class="button" href="{{ url('/faq') }}"> FAQ's </a>
+    </footer>
   </body>
 </html>

@@ -76,6 +76,10 @@ Route::get('user/{id}/bidding-history', 'UserController@biddingHistory')->name('
 Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ownedAuctions');
 
 
+// Static Pages
+Route::get('about', 'StaticPagesController@getAboutUs')->name('about');
+Route::get('faq', 'StaticPagesController@getFaq')->name('faq');
+
 
 
 
