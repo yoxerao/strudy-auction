@@ -27,6 +27,7 @@ Route::get('auction/edit/{id}', 'AuctionController@editForm')->name('editAuction
 Route::put('auction/edit/{id}', 'AuctionController@edit')->name('editAuction');
 Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction');
 Route::get('auctions/{id}', 'AuctionController@show_my')->name('showMyAuction');
+Route::delete('auction/{id}', 'CommentController@delete')->name('deleteComment');
 
 // Bid
 Route::get('bid/makeBid/{id}', 'BidController@makeBidForm')->name('makeBidForm');
@@ -79,8 +80,6 @@ Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ow
 // Static Pages
 Route::get('about', 'StaticPagesController@getAboutUs')->name('about');
 Route::get('faq', 'StaticPagesController@getFaq')->name('faq');
-
-
 
 
 //Route::get('erro')->name('Error');

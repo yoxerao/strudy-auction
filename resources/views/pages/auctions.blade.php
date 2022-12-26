@@ -38,7 +38,14 @@
         </article>
     @endforeach
     </section>
-    
+
+    <h3> Comments </h3>
+    <section id="comment">
+        <p>{{ $comment->author }}</p>
+        <p>{{ $comment->creation_date }}</p>
+        <p>{{ $comment->content }}</p>
+        <a class="button button-outline" href="{{ route('deleteComment', ['id' => $auction['id']]) }}"> Delete Comment </a>
+    </section>
 
 </section>
 
