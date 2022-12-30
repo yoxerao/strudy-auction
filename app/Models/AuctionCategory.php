@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Bid extends Model
+class AuctionCategory extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'bid';
+    protected $table = 'auction_category';
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
@@ -22,20 +22,20 @@ class Bid extends Model
      * @var array
      */
     protected $fillable = [
-        'value', 'date', 'winner', 'user_id', 'id_auction',
+        'id_auction', 'id_category',
     ];
 
     /**
-     * The user that made this bid.
-     */
-    public function user() {
-        return $this->belongsTo('App\Models\User');
-    }
-
-    /**
-     * The auction this bid was made on.
+     * The auction for this category.
      */
     public function auction() {
         return $this->belongsTo('App\Models\Auction');
+    }
+
+    /**
+     * The category for this auction.
+     */
+    public function category() {
+        return $this->belongsTo('App\Models\Category');
     }
 }
