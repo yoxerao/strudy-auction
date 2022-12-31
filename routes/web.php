@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Routing\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -74,6 +76,13 @@ Route::group(['prefix' => 'admin'], function () {
 //listings
 Route::get('user/{id}/bidding-history', 'UserController@biddingHistory')->name('biddingHistory');
 Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ownedAuctions');
+
+//Payments
+Route::get('user/{id}/deposit', 'DepositController@showForm')->name('depositForm');
+Route::post('user/{id}/deposit', 'DepositController@processForm')->name('depositProcess');
+Route::post('user/{id}/deposit/capture', 'DepositController@capture')->name('depositCapture');
+Route::get('user/{id}/deposit/success', 'DepositController@success')->name('depositSuccess');
+Route::get('user/{id}/deposit/cancel', 'DepositController@cancel')->name('depositCancel');
 
 
 // Static Pages

@@ -12,6 +12,6 @@
     
     <a class="button button-outline" href="{{ route('editUser', ['id' => $user['id']]) }}">Edit profile</a>
     <a class="button button-outline" href="{{ route('editPass', ['id' => $user['id']]) }}">Change password</a>
-
+    <a class="button button-outline" href="{{ route('depositForm', ['id' => $user['id']]) }}">Deposit into account</a>
 </section>
 @endsection
