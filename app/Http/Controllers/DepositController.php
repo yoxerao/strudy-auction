@@ -44,7 +44,7 @@ class DepositController extends Controller
             ],
         ]);
 
-
+        
         
 
         return redirect($deposit['links'][1]['href']);
