@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Deposit;
 use Illuminate\Http\Request;
 use Srmklive\PayPal\Service\PayPal;
 use App\Models\User;
@@ -18,61 +19,53 @@ class DepositController extends Controller
     }
 
 
-    public function processForm(Request $request, $id)
-    {
-        // Validate the form data
-        $request->validate([
-            'amount' => 'required|numeric',
-        ]);
+    public function create(Request $request){
+        error_log('ZZZ');
+        $data = json_decode($request->getContent(), true);  
         $provider = \PayPal::setProvider();
         $provider->setApiCredentials(config('paypal'));
         $token = $provider->getAccessToken();
         $provider->setAccessToken($token);
-        $deposit = $provider->createOrder([
+
+        $amount = Deposit::getDepositAmount($data['value']);
+        $author = $data['author'];
+
+
+        
+        error_log('xx');
+
+        $data = json_decode('{
+            "intent": "CAPTURE",
+            "purchase_units": [
+              {
+                "amount": {
+                  "currency_code": "USD",
+                  "value": "100.00"
+                }
+              }
+            ]
+        }', true);
+        
+        error_log('yy');
+        $order = $provider->createOrder($data);
+
+        /*$deposit = $provider->createOrder([
             'intent' => 'CAPTURE',
             'purchase_units' => [
                 [
                     'amount' => [
                         'currency_code' => 'EUR',
-                        'value' => $request->amount,
+                        'value' => $amount,
                     ],
+                    'author' => $author,
                 ],
             ],
-            'application_context' => [
-                'cancel_url' => route('depositCancel', ['id' => $id]),
-                'return_url' => route('depositSuccess', ['id' => $id]),
-            ],
-        ]);
+        ]);*/
 
-        
-        
+        //save deposit to database
 
-        return redirect($deposit['links'][1]['href']);
-    }
 
-    public function success(Request $request, $id)
-    {
-        // Verify the payment and update the database
-        $response = PayPal::processPayment($request->paymentId, $request->PayerID);
-
-        if ($response['status'] == 'approved') {
-            // Payment approved, update the database
-            $user = User::find($id);
-            $user->balance += $request->amount;
-            $user->save();
-        } else {
-            // Payment failed, redirect the user with an error message
-            return redirect()->route('depositForm', ['id' => $id])->with('error', 'Payment failed');
-        }
-
-        // Redirect the user with a success message
-        return redirect()->route('depositForm', ['id' => $id])->with('status', 'Deposit successful');
-    }
-
-    public function cancel($id)
-    {
-        // Redirect the user with a cancel message
-        return redirect()->route('depositForm', ['id' => $id])->with('error', 'Payment cancelled');
+        return response()->json($deposit);
     }
 
 

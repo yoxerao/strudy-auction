@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DepositController;
 use Illuminate\Http\Request;
 
 /*
@@ -14,3 +15,7 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('/user', 'Auth\LoginController@getUser');
+                            
+Route::post('paypal/order/create', 'DepositController@create')->name('createDeposit');
+Route::post('paypal/order/capture', 'DepositController@capture')->name('captureDeposit');
+
