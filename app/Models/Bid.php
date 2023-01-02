@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Bid extends Model
@@ -12,6 +13,9 @@ class Bid extends Model
      * @var string
      */
     protected $table = 'bid';
+
+    // * We want to keep a record of all bids on the bd because of the user history.
+    use SoftDeletes;
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
@@ -28,14 +32,16 @@ class Bid extends Model
     /**
      * The user that made this bid.
      */
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo('App\Models\User');
     }
 
     /**
      * The auction this bid was made on.
      */
-    public function auction() {
+    public function auction()
+    {
         return $this->belongsTo('App\Models\Auction');
     }
 }

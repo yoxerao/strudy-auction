@@ -22,10 +22,10 @@
         <article class="auction">
             <h1>{{ $auction->name }}</h1>
             <p>{{ $auction->description }}</p>
+            <div id="timer" data-id="{{ $auction->id }}"data-start-time="{{ $auction->start_date }}" data-end-time="{{ $auction->end_date }}">
+            </div>
             <p>Buyout: {{ $auction->buyout_value }}</p>
             <p>Min Bid: {{ $auction->min_bid }}</p>
-            <p>Start Date: {{ $auction->start_date }}</p>
-            <p>End Date: {{ $auction->end_date }}</p>
             <p>Winner: {{ $auction->winner }}</p>
             <p>Owner: {{ $auction->user_id }}</p>
             <a href="/auction/edit/{{ $auction->id }}">
