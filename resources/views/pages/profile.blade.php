@@ -3,6 +3,10 @@
 @section('title', 'userInfo')
 
 @section('content')
+@if (Auth::check() && Auth::id() != $user['id'])
+    <button class="button button-outline" onclick="window.location.href='/user/{{ $user['id'] }}/report'">Report User</button>
+@endif
+
 <section id='userInfo'>
     <h4 class="text-center">name: {{ $user['name'] }}</h4>
     <h4 class="text-center">email: {{ $user['email'] }}</h4>
