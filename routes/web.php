@@ -20,12 +20,12 @@ Route::get('/', 'HomeController@show')->name('homepage');
 //Route::get('cards/{id}', 'CardController@show');
 
 // Auctions
-Route::get('auction/create', 'AuctionController@createForm')->name('createAuctionForm');
+Route::get('auction/create', 'AuctionController@createForm')->name('createAuctionForm')->middleware('auth');
 Route::post('auction/create', 'AuctionController@create')->name('createAuction');
 Route::get('auctions', 'AuctionController@list');
-Route::get('auction/edit/{id}', 'AuctionController@editForm')->name('editAuctionForm');
+Route::get('auction/edit/{id}', 'AuctionController@editForm')->name('editAuctionForm')->middleware('auth');
 Route::put('auction/edit/{id}', 'AuctionController@edit')->name('editAuction');
-Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction');
+Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction')->middleware('auth');
 Route::get('auctions/{id}', 'AuctionController@show_my')->name('showMyAuction');
 
 // Bid
@@ -50,9 +50,9 @@ Route::post('recovery', 'Auth\PasswordResetController@sendLink')->name('sendLink
 
 //User
 Route::get('user/{id}', 'UserController@show')->name('userProfile');
-Route::get('user/{id}/edit', 'UserController@info_edit')->name('editUser'); // ! IMPORTANTE CRIAR POLICY PARA IMPEDIR EDIT SE NAO FOR AUTENTICADO OU ADMIN
+Route::get('user/{id}/edit', 'UserController@info_edit')->name('editUser')->middleware('auth'); // ! IMPORTANTE CRIAR POLICY PARA IMPEDIR EDIT SE NAO FOR AUTENTICADO OU ADMIN
 Route::put('user/{id}/edit', 'UserController@edit')->name('editProfile');
-Route::get('user/{id}/editpass', 'UserController@info_edit_pass')->name('editPass_info');
+Route::get('user/{id}/editpass', 'UserController@info_edit_pass')->name('editPass_info')->middleware('auth');
 Route::put('user/{id}/editpass', 'UserController@edit_pass')->name('editPass'); // ! IMPORTANTE CRIAR POLICY PARA IMPEDIR EDIT SE NAO FOR AUTENTICADO
 Route::get('user/{id}/report', 'UserController@reportForm')->name('reportUserForm')->middleware('auth');
 Route::post('user/{id}/report', 'UserController@reportPost')->name('reportUserPost');

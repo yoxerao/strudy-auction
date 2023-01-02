@@ -1,53 +1,48 @@
 
-/**
- * 
- * !-----------------------------------------------
- * !-----------------------------------------------
- * !-------       FIX THIS FUNCTION!!      --------
- * !-----------------------------------------------
- * !-----------------------------------------------
- * 
- * 
- */
 
+// Define the updateTimers() function
+function updateTimers() {
+    // Get all of the auction end dates
+    var timers = document.querySelectorAll('.timer');
 
+    // Loop through the end dates and calculate the time remaining for each one
+    timers.forEach(function(timer) {
+        // Get the end date for the auction
+        var end = new Date(timer.getAttribute('data-end-date'));
 
+        // Calculate the time remaining
+        var remaining = end - new Date();
 
-function startTimer() {
-    // Get the start and end times from the data-start-time and data-end-time attributes.
-    var startTime = new Date(document.getElementById('timer').getAttribute('data-start-time'));
-    var endTime = new Date(document.getElementById('timer').getAttribute('data-end-time'));
-    var auctionId  = document.getElementById('timer').getAttribute('data-auction-id');
-    // Update the timer display every 1000 milliseconds (1 second).
-    var timer = setInterval(function() {
-        // Calculate the remaining time.
-        var remainingTime = endTime - new Date().getTime();
+        // Convert the time remaining to days, hours, minutes, and seconds
+        var days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((remaining % (1000 * 60)) / 1000);
 
-        // Calculate the number of days, hours, minutes, and seconds from the remaining time.
-        var days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-        // Update the timer display.
-        document.getElementById('timer').innerHTML = 'Time left: ' + days + 'D ' + hours + ':' + minutes + ':' + seconds;
-
-        // If the timer has reached 0, stop the timer and check if the auction has been deleted.
-        if (remainingTime <= 0) {
-            clearInterval(timer);
-            checkDeleted(auctionId);
-        }
-    }, 1000);
+        // Update the timer on the page
+        timer.innerHTML = 'Time left:' + days + 'D ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+    });
 }
 
-function checkDeleted(auctionId) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/auctions/' + auctionId);
-    xhr.onload = function() {
-        if (xhr.status === 404) {
-            // The auction has been deleted.
-            alert('The auction is over or has been deleted.');
-        }
-    };
-    xhr.send();
+function updateTimerAuctionPage() {
+    // Get the end date for the timer
+    var timer = document.getElementById('timer')
+    if (timer != null) {
+        endDate = timer.getAttribute('data-end-date');
+        console.log('why am I being called?');
+        // Calculate the time remaining
+        var remaining = new Date(endDate) - new Date();
+
+        // Convert the time remaining to days, hours, minutes, and seconds
+        var days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+        // Update the timer on the page
+        document.getElementById('timer').innerHTML = 'Time left:' + days + 'D ' + hours + 'h ' + minutes + 'm ' + seconds + 's';
+    }
 }
+// Update the timers every second
+setInterval(updateTimers, 1000);
+setInterval(updateTimerAuctionPage, 1000);
