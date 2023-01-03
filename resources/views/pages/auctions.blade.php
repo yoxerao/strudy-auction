@@ -35,6 +35,10 @@
             <a href="/bid/makeBid/{{ $auction->id }}">
                 <button> Make Bid </button>
             </a>
+            <form action="{{ route('deleteBid', $auction->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-danger">Remove Bid</button>
+            </form>
         </article>
     @endforeach
     </section>
