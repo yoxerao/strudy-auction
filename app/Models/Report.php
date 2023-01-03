@@ -22,20 +22,24 @@ class Report extends Model
      * @var array
      */
     protected $fillable = [
-        'reason', 'id_auction', 'id_user',
+        'reason', 'author', 'reported',
     ];
 
     /**
      * The user who made this report.
      */
-    public function user() {
-        return $this->belongsTo('App\Models\User');
+    public function author()
+    {
+        return $this->belongsTo('App\Models\User', 'author');
     }
 
-    /**
-     * The auction for this report.
-     */
-    public function auction() {
-        return $this->belongsTo('App\Models\Auction');
+    public function reported()
+    {
+        return $this->belongsTo('App\Models\User', 'reported');
+    }
+
+    public function validation()
+    {
+        return $this->hasOne('App\Models\Validation', 'id_report');
     }
 }
