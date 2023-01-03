@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Auction;
 use App\Models\Bid;
+use App\Models\UserFollowAuction;
 
 use DateTime;
 
@@ -48,6 +49,17 @@ class BidController extends Controller
         $bid->user_id = Auth::user()->id;
         $bid->id_auction = $id;
         $bid->save();
+
+        $alreadyFollow = UserFollowAuction::where('id_user', Auth::id())
+                                            ->where('id_auction', $id)
+                                            ->first();
+        
+        if($alreadyFollow == null) {
+         
+          $idUser = Auth::id();
+          $data=array('id_user'=>$idUser, 'id_auction'=>$id);
+          DB::table('user_follow_auction')->insert($data);
+        }
       }
       else {
         return redirect()->back()->with('error', 'You can not bid lower than minimum bid or higher than the buyout');

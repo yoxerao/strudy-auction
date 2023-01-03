@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Auction;
 use App\Models\Bid;
+use App\Models\UserFollowAuction;
 
 class AuctionController extends Controller
 {
@@ -55,6 +56,16 @@ class AuctionController extends Controller
       $auction->winner = null;
       $auction->user_id = Auth::user()->id;
       $auction->save();
+
+      $alreadyFollow = UserFollowAuction::where('id_user', Auth::id())
+                                            ->where('id_auction', $auction->id)
+                                            ->first();
+        
+      if($alreadyFollow == null) {
+        $idUser = Auth::id();
+        $data=array('id_user'=>$idUser, 'id_auction'=>$auction->id);
+        DB::table('user_follow_auction')->insert($data);
+      }
 
       return redirect("/auctions");
     }
