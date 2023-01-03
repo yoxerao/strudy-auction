@@ -1,0 +1,12 @@
+.text_search {
+    display: grid;
+  place-items: center;
+  height: 60vh;
+  margin: 0;
+  
+}
+
+.full-height {
+  background-color: #fad2c7;
+  height: 100vh;
+}

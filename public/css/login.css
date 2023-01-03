@@ -1,0 +1,43 @@
+.text_search {
+    display: grid;
+  place-items: center;
+  
+  margin: 0;
+  
+}
+
+.full-height {
+  background-color: #fad2c7;
+  height: 100vh;
+
+}
+
+.height_btn {
+    margin-top: 10px;
+}
+
+.formulario {
+    length: 60%;
+    width: 60%;
+    margin-top: 10%;
+    margin-left: 23%;
+    
+}
+
+.pass {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.submit {
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.buttons_margin {
+    margin-top: 20px;
+}
+
+.textBox {
+    background-color: white;
+}
