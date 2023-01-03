@@ -26,8 +26,12 @@ Route::get('auctions', 'AuctionController@list');
 Route::get('auction/edit/{id}', 'AuctionController@editForm')->name('editAuctionForm');
 Route::put('auction/edit/{id}', 'AuctionController@edit')->name('editAuction');
 Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction');
-Route::get('auctions/{id}', 'AuctionController@show_my')->name('showMyAuction');
-Route::delete('auction/{id}', 'CommentController@delete')->name('deleteComment');
+Route::get('auction/{id}', 'AuctionController@show_my')->name('showMyAuction');
+
+//Comments
+Route::post('comment', 'CommentController@create')->name('createComment');
+//Route::put('comment/{id}', 'CommentController@edit');
+Route::delete('comment/delete/{id}', 'CommentController@delete')->name('deleteComment');
 
 // Bid
 Route::get('bid/makeBid/{id}', 'BidController@makeBidForm')->name('makeBidForm');

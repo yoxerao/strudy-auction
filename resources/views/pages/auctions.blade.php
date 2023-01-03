@@ -20,7 +20,7 @@
     <section id="list-auctions">
     @foreach ($auctions as $auction)
         <article class="auction">
-            <h1>{{ $auction->name }}</h1>
+            <a href="/auction/{{ $auction->id }}" > <h1> {{ $auction->name }} </h1> </a>
             <p>{{ $auction->description }}</p>
             <p>Buyout: {{ $auction->buyout_value }}</p>
             <p>Min Bid: {{ $auction->min_bid }}</p>
@@ -28,25 +28,9 @@
             <p>End Date: {{ $auction->end_date }}</p>
             <p>Winner: {{ $auction->winner }}</p>
             <p>Owner: {{ $auction->user_id }}</p>
-            <a href="/auction/edit/{{ $auction->id }}">
-                <button> Edit or Delete Auction </button>
-            </a>
-            <p></p>
-            <a href="/bid/makeBid/{{ $auction->id }}">
-                <button> Make Bid </button>
-            </a>
         </article>
     @endforeach
     </section>
-
-    <h3> Comments </h3>
-    <section id="comment">
-        <p>{{ $comment->author }}</p>
-        <p>{{ $comment->creation_date }}</p>
-        <p>{{ $comment->content }}</p>
-        <a class="button button-outline" href="{{ route('deleteComment', ['id' => $auction['id']]) }}"> Delete Comment </a>
-    </section>
-
 </section>
 
 @endsection
