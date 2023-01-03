@@ -30,7 +30,6 @@ Route::get('auction/{id}', 'AuctionController@show_my')->name('showMyAuction');
 
 //Comments
 Route::post('comment', 'CommentController@create')->name('createComment');
-//Route::put('comment/{id}', 'CommentController@edit');
 Route::delete('comment/delete/{id}', 'CommentController@delete')->name('deleteComment');
 
 // Bid

@@ -11,6 +11,7 @@
         <p>Buyout: {{ $auction['buyout_value'] }}</p>
         <p>Min Bid: {{ $auction['min_bid'] }}</p>
         <p>Start Date: {{ $auction['start_date'] }}</p>
+        <div id="timer" data-end-date="{{$auction['end_date']}}"></div>
         <p>End Date: {{ $auction['end_date'] }}</p>
         <p>Winner: {{ $auction['winner'] }}</p>
         <p>Owner: {{ $auction['user_id'] }}</p>
@@ -27,11 +28,17 @@
 <section id=commment>
     <h4> Comments </h4>
 @foreach ($comments as $comment)
-
     <article class="comment">
         <p>Author: {{ $comment['author'] }}</p>
         <p>Date: {{ $comment['creation_date'] }}</p>
         <p>Text: {{ $comment['content'] }}</p>
+        <form method="POST" action="{{ route('deleteComment', $comment->id) }}">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>
+                Delete
+            </button>
+        </form>
     </article>
 @endforeach
 
