@@ -1,0 +1,41 @@
+.text_search {
+    display: grid;
+  place-items: center;
+  height: 60vh;
+  margin: 0;
+  font-size: 40px;
+}
+
+.full-height {
+  background-color: #fad2c7;
+  height: 100vh;
+}
+
+.text_size {
+    font-size: 30px;
+    margin: 300px;
+}
+
+.createAuctionButton {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.auctionBox {
+    background-color: white;
+    height: 150%;
+}
+
+.editAuctionButton {
+    margin-top: 10px;
+    margin-left: 22px;
+}
+
+.makeBidButton {
+    margin-bottom: 20px;
+    margin-left: 22px;
+}
+
+.titleItem {
+    margin-top: 20px;
+}
