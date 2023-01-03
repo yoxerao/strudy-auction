@@ -3,70 +3,91 @@
 namespace App\Http\Controllers;
 
 use App\Models\Deposit;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\View\View;
+use srmklive\PayPal\Services\PayPal;
 use Illuminate\Http\Request;
-use Srmklive\PayPal\Service\PayPal;
-use App\Models\User;
 
 class DepositController extends Controller
 {
-        public function showForm($id)
+    public function showForm()
     {
-        // Retrieve the user's information from the database
-        $user = User::find($id);
-
-        // Render the deposit form
-        return view('pages.depositForm', compact('user'));
+        return view('pages.depositForm');
     }
 
+    public function create(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
 
-    public function create(Request $request){
-        error_log('ZZZ');
-        $data = json_decode($request->getContent(), true);  
         $provider = \PayPal::setProvider();
         $provider->setApiCredentials(config('paypal'));
+        $provider->setCurrency('EUR');
         $token = $provider->getAccessToken();
         $provider->setAccessToken($token);
 
-        $amount = Deposit::getDepositAmount($data['value']);
-        $author = $data['author'];
-
-
-        
-        error_log('xx');
-
-        $data = json_decode('{
+        $depositAmount = $data['value'];
+        $orderdata = json_decode('{
             "intent": "CAPTURE",
             "purchase_units": [
               {
                 "amount": {
-                  "currency_code": "USD",
-                  "value": "100.00"
+                  "currency_code":"EUR",
+                  "value":"' . $depositAmount . '"
                 }
               }
             ]
         }', true);
-        
-        error_log('yy');
-        $order = $provider->createOrder($data);
 
-        /*$deposit = $provider->createOrder([
-            'intent' => 'CAPTURE',
-            'purchase_units' => [
+
+
+        /*$order = $provider->createOrder([
+            "intent" => "CAPTURE",
+            "purchase_units" => [
                 [
-                    'amount' => [
-                        'currency_code' => 'EUR',
-                        'value' => $amount,
-                    ],
-                    'author' => $author,
-                ],
-            ],
+                    "amount" => [
+                        "currency_code" => "EUR",
+                        "value" => $depositAmount
+                    ]
+                ]
+            ]
         ]);*/
 
-        //save deposit to database
 
+        $order = $provider->createOrder($orderdata);
 
-        return response()->json($deposit);
+        return response()->json($order);
     }
 
+    public function capture(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        $orderID = $data['orderID'];
 
+        $provider = \PayPal::setProvider();
+        $provider->setApiCredentials(config('paypal'));
+        $provider->setCurrency('EUR');
+        $token = $provider->getAccessToken();
+        $provider->setAccessToken($token);
+
+
+
+        $result = $provider->capturePaymentOrder($orderID);
+        /** 
+         * ! for some reason calling Auth::id() here returns null, ask professor why
+         */
+        /*
+        if ($result['status'] == 'COMPLETED') {
+
+            $depositVal = floatval($result['purchase_units'][0]['payments']['captures'][0]['amount']['value']);
+
+            $deposit = new Deposit();
+            $deposit->value = $depositVal;
+            $deposit->date = Carbon::now();
+            $deposit->author = Auth::id();
+            $deposit->save();
+        }*/
+
+        return response()->json($result);
+    }
 }

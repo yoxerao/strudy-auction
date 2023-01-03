@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Models\User;
 /*
 |--------------------------------------------------------------------------
@@ -76,7 +77,7 @@ Route::get('user/{id}/bidding-history', 'UserController@biddingHistory')->name('
 Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ownedAuctions');
 
 //Payments
-Route::get('user/{id}/deposit', 'DepositController@showForm')->name('depositForm');
+Route::get('user/{id}/deposit', 'DepositController@showForm')->name('depositForm')->middleware('auth');
 /*Route::post('user/{id}/deposit', 'DepositController@processForm')->name('depositProcess');
 Route::get('user/{id}/deposit/success', 'DepositController@success')->name('depositSuccess');
 Route::get('user/{id}/deposit/cancel', 'DepositController@cancel')->name('depositCancel');*/
