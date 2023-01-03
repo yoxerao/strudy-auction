@@ -62,9 +62,11 @@ class AuctionController extends Controller
       ->first();
 
     if ($alreadyFollow == null) {
-      $idUser = Auth::id();
-      $data = array('id_user' => $idUser, 'id_auction' => $auction->id);
-      DB::table('user_follow_auction')->insert($data);
+
+      $userFollowAuction = new UserFollowAuction;
+      $userFollowAuction->id_user = Auth::id();
+      $userFollowAuction->id_auction = $auction->id;
+      $userFollowAuction->save();
     }
 
     return redirect("/auctions");
