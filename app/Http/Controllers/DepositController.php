@@ -77,7 +77,7 @@ class DepositController extends Controller
          * ! for some reason calling Auth::id() here returns null, ask professor why
          */
         /*
-        if ($result['status'] == 'COMPLETED') {
+        if ($result['status'] == 'COMPLETED' && Auth::check()) {
 
             $depositVal = floatval($result['purchase_units'][0]['payments']['captures'][0]['amount']['value']);
 
