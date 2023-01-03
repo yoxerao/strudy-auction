@@ -35,7 +35,7 @@
     @method('DELETE')
     
     <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>
-        Delete
+      Delete
     </button>
 </form>
 @endsection

@@ -20,7 +20,7 @@
     <section id="list-auctions">
     @foreach ($auctions as $auction)
         <article class="auction">
-            <h1>{{ $auction->name }}</h1>
+            <a href="/auction/{{ $auction->id }}" > <h1> {{ $auction->name }} </h1> </a>
             <div class="timer" data-end-date="{{$auction->end_date}}">
             </div>
             <br>

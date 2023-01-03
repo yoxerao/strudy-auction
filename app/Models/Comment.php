@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +16,8 @@ class Comment extends Model
      * @var string
      */
     protected $table = 'comment';
+
+    protected $primaryKey = 'id';
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;

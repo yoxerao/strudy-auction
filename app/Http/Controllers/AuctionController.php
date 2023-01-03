@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Auction;
 use App\Models\Bid;
+use App\Models\Comment;
 
 class AuctionController extends Controller
 {
@@ -61,7 +61,6 @@ class AuctionController extends Controller
 
     public function createForm()
     {
-
       return view('pages.auctionCreate');
     }
 
@@ -100,7 +99,6 @@ class AuctionController extends Controller
   public function show_my(int $id)
   {
     $auction = Auction::find($id);
-
     $auctionInfo = [
       'id' => $auction->id,
       'name' => $auction->name,
@@ -109,10 +107,13 @@ class AuctionController extends Controller
       'description' => $auction->description,
       'start_date' => $auction->start_date,
       'end_date' => $auction->end_date,
+      'winner' => $auction->winner,
       'user_id' => $auction->user_id,
     ];
 
-    return view('pages.myAuctions', ['auctions' => $auctionInfo]);
+    $comments = Comment::where('id_auction', $id)->orderBy('creation_date', 'ASC')->get();
+
+    return view('pages.auction', ['auction' => $auctionInfo, 'comments'=>$comments]);
     
   }
 }

@@ -25,9 +25,14 @@ Route::post('auction/create', 'AuctionController@create')->name('createAuction')
 Route::get('auctions', 'AuctionController@list');
 Route::get('auction/edit/{id}', 'AuctionController@editForm')->name('editAuctionForm')->middleware('auth');
 Route::put('auction/edit/{id}', 'AuctionController@edit')->name('editAuction');
-Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction')->middleware('auth');
-Route::get('auctions/{id}', 'AuctionController@show_my')->name('showMyAuction');
+Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction');
+Route::get('auction/{id}', 'AuctionController@show_my')->name('showMyAuction');
 Route::post('auction/{id}/bid/delete', 'BidController@deleteHighestBid')->name('deleteBid');
+
+//Comments
+Route::post('comment', 'CommentController@create')->name('createComment');
+Route::delete('comment/delete/{id}', 'CommentController@delete')->name('deleteComment');
+
 
 // Bid
 Route::get('bid/makeBid/{id}', 'BidController@makeBidForm')->name('makeBidForm');
@@ -84,8 +89,6 @@ Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ow
 // Static Pages
 Route::get('about', 'StaticPagesController@getAboutUs')->name('about');
 Route::get('faq', 'StaticPagesController@getFaq')->name('faq');
-
-
 
 
 //Route::get('erro')->name('Error');
