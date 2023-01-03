@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -29,14 +29,14 @@
     <header class="p-3">
       <h1><a class=" text-danger" href="{{ url('/') }}">eAuction</a></h1>
       @if (Auth::guard('admin')->check())
-      <a class="btn btn-danger btn-lg" href="{{ url('/logout') }}"> Logout </a>
-      <a href="/user/{{ Auth::guard('admin')->user()->id }}"> {{ Auth::guard('admin')->user()->name }}</a>
+        <a class="btn btn-danger btn-lg" href="{{ url('/logout') }}"> Logout </a>
+        <a href="/admin/{{ Auth::guard('admin')->user()->id }}"> {{ Auth::guard('admin')->user()->name }}</a>
       @elseif (Auth::check())
-      <a class="btn btn-danger btn-lg" href="{{ url('/logout') }}"> Logout </a>
-      <a class="text-dark pe-5" href="/user/{{ Auth::user()->id }}"> {{ Auth::user()->name }}</a>
+        <a class="btn btn-danger btn-lg" href="{{ url('/logout') }}"> Logout </a>
+        <a class="text-dark pe-5" href="/user/{{ Auth::user()->id }}"> {{ Auth::user()->name }}</a>
       @else
-      <a class="btn btn-danger btn-lg" href="{{ url('/login') }}"> Login </a>
-      <a class="btn btn-danger btn-lg" href="{{ url('/register') }}"> Register </a>
+        <a class="btn btn-danger btn-lg" href="{{ url('/login') }}"> Login </a>
+        <a class="btn btn-danger btn-lg" href="{{ url('/register') }}"> Register </a>
       @endif
     </header>
     <div class="full-height">

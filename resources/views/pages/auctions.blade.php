@@ -34,41 +34,47 @@
                     <p>Buyout: {{ $auction->buyout_value }}</p>
                     <p>Min Bid: {{ $auction->min_bid }}</p>
                     <p>Winner: {{ $auction->winner }}</p>
-                    <div>
-                        <div class="p-3 m-3">
+                    
+                        
                             
-            @if (Auth::check())
-                @if (Auth::user()->id == $auction->user_id)
-                    <a href="/auction/edit/{{ $auction->id }}">
-                                        <button class="btn btn-danger"> Edit or Delete Auction </button>
-                                    </a>
-                                </div>
+           
+                <div>
+                    @if (Auth::id() == $auction->user_id)
                         <div class="p-3 m-3">
-                                @endif
-                <a href="/bid/makeBid/{{ $auction->id }}">
-                                    <button class="btn btn-danger"> Make Bid </button>
-                                </a>
+                            <a href="/auction/edit/{{ $auction->id }}">
+                                <button class="btn btn-danger"> Edit or Delete Auction </button>
+                            </a>
+                        </div> 
+                    @endif
+                    @if(Auth::check())
+                        <div class="p-3 m-3">
+                            <a href="/bid/makeBid/{{ $auction->id }}">
+                                <button class="btn btn-danger"> Make Bid </button>
+                            </a>
                         </div>
-                    </div>
+                    @endif
+                </div>
+                @if(Auth::check())
                     <div class="p-3 m-3">
-                            <form action="{{ route('deleteBid', $auction->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-danger">Remove Bid</button>
-                            </form>
+                        <form action="{{ route('deleteBid', $auction->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Remove Bid</button>
+                        </form>
                     </div>
-                        <form action="{{ route('followAuction', $auction->id) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-danger">Follow Auction</button>
-                </form>
-            @endif
-            <a href="/auction/followers/{{ $auction->id }}">
-                <button> See Auction Followers </button>
-            </a>
-            <form action="{{ route('deleteBid', $auction->id) }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-danger">Remove Bid</button>
-            </form>
-        </article>
+                    <form action="{{ route('followAuction', $auction->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Follow Auction</button>
+                    </form>
+                    <form action="{{ route('deleteBid', $auction->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Remove Bid</button>
+                    </form>
+                @endif
+            
+                <a href="/auction/followers/{{ $auction->id }}">
+                    <button> See Auction Followers </button>
+                </a>
+            </article>
             </div>
             @endforeach
         </div>
