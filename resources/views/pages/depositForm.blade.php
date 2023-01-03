@@ -64,9 +64,35 @@
                     // Successful capture! For dev/demo purposes:
                     console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
                     const transaction = orderData.purchase_units[0].payments.captures[0];
-                    const amount = orderData.purchase_units[0].payments.captures[0].amount.value;
+                    const depAmount = orderData.purchase_units[0].payments.captures[0].amount.value;
+                    console.log(depAmount);
+                    
+                    if (transaction.status === 'COMPLETED') {
+                        // Make a second fetch request here
+                        console.log(depAmount);
+                        return fetch(`/deposit`, {
+                            method: "post",
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                "amount": depAmount
+                            })
+                        })
+                        .then((response) => response.json())
+                        .then((responseData) => {
+                            if(responseData.success){
+                                console.log(responseData.message);
+                                alert(`Transaction ${transaction.status}: ${responseData.data}€\n\n`);
+                            } else {
+                                console.log('ERROR CREATING NEW DEPOSIT IN DB');
+                                alert(`ERROR STORING DEPOSIT IN DB\n\n`);
+                            }
+                        });
+                    }
 
-                    alert(`Transaction ${transaction.status}: ${amount}€\n\n`);
+                    
                     // When ready to go live, remove the alert and show a success message within this page. For example:
                     // const element = document.getElementById('paypal-button-container');
                     // element.innerHTML = '<h3>Thank you for your payment!</h3>';

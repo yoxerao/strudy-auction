@@ -8,12 +8,30 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\View\View;
 use srmklive\PayPal\Services\PayPal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DepositController extends Controller
 {
     public function showForm()
     {
         return view('pages.depositForm');
+    }
+
+    public function processForm(Request $request)
+    {
+        Log::debug('amount: ' . $request->input('amount'));
+
+        $deposit = new Deposit;
+        $deposit->value = floatval($request->input('amount'));
+        $deposit->date = Carbon::now();
+        $deposit->author = Auth::user()->id;
+        $deposit->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Deposit created successfully',
+            'data' => $request->input('amount')
+        ]);
     }
 
     public function create(Request $request)
@@ -73,20 +91,7 @@ class DepositController extends Controller
 
 
         $result = $provider->capturePaymentOrder($orderID);
-        /** 
-         * ! for some reason calling Auth::id() here returns null, ask professor why
-         */
-        /*
-        if ($result['status'] == 'COMPLETED' && Auth::check()) {
 
-            $depositVal = floatval($result['purchase_units'][0]['payments']['captures'][0]['amount']['value']);
-
-            $deposit = new Deposit();
-            $deposit->value = $depositVal;
-            $deposit->date = Carbon::now();
-            $deposit->author = Auth::id();
-            $deposit->save();
-        }*/
 
         return response()->json($result);
     }

@@ -78,6 +78,7 @@ Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ow
 
 //Payments
 Route::get('user/{id}/deposit', 'DepositController@showForm')->name('depositForm')->middleware('auth');
+Route::post('deposit', 'DepositController@processForm')->name('depositProcess')->middleware('auth');
 /*Route::post('user/{id}/deposit', 'DepositController@processForm')->name('depositProcess');
 Route::get('user/{id}/deposit/success', 'DepositController@success')->name('depositSuccess');
 Route::get('user/{id}/deposit/cancel', 'DepositController@cancel')->name('depositCancel');*/

@@ -10,8 +10,11 @@
     <h4 class="text-center">rating: {{ $user['rating'] }}</h4>
     <h4 class="text-center">balance: {{ $user['balance'] }}</h4>
     
-    <a class="button button-outline" href="{{ route('editUser', ['id' => $user['id']]) }}">Edit profile</a>
-    <a class="button button-outline" href="{{ route('editPass', ['id' => $user['id']]) }}">Change password</a>
-    <a class="button button-outline" href="{{ route('depositForm', ['id' => $user['id']]) }}">Deposit into account</a>
+    
+    @if ($user['id'] == Auth::user()->id)
+        <a class="button button-outline" href="{{ route('editUser', ['id' => $user['id']]) }}">Edit profile</a>
+        <a class="button button-outline" href="{{ route('editPass', ['id' => $user['id']]) }}">Change password</a>
+        <a class="button button-outline" href="{{ route('depositForm', ['id' => $user['id']]) }}">Deposit into account</a>
+    @endif
 </section>
 @endsection
