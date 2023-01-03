@@ -27,12 +27,12 @@ Route::get('auction/edit/{id}', 'AuctionController@editForm')->name('editAuction
 Route::put('auction/edit/{id}', 'AuctionController@edit')->name('editAuction');
 Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction')->middleware('auth');
 Route::get('auctions/{id}', 'AuctionController@show_my')->name('showMyAuction');
-Route::post('auction/{id}/bid/delete', 'BidController@deleteHighestBid')->name('deleteBid');
-Route::post('auction/{id}/follow', 'UserFollowAuctionController@follow')->name('followAuction');
+Route::post('auction/{id}/bid/delete', 'BidController@deleteHighestBid')->name('deleteBid')->middleware('auth');
+Route::post('auction/{id}/follow', 'UserFollowAuctionController@follow')->name('followAuction')->middleware('auth');
 Route::get('auction/followers/{id}', 'UserFollowAuctionController@list');
 
 // Bid
-Route::get('bid/makeBid/{id}', 'BidController@makeBidForm')->name('makeBidForm');
+Route::get('bid/makeBid/{id}', 'BidController@makeBidForm')->name('makeBidForm')->middleware('auth');
 Route::post('bid/makeBid/{id}', 'BidController@makeBid')->name('makeBid');
 
 // API
