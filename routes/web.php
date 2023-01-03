@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Models\User;
 use App\Models\Report;
 /*
 |--------------------------------------------------------------------------
@@ -25,11 +27,16 @@ Route::post('auction/create', 'AuctionController@create')->name('createAuction')
 Route::get('auctions', 'AuctionController@list');
 Route::get('auction/edit/{id}', 'AuctionController@editForm')->name('editAuctionForm')->middleware('auth');
 Route::put('auction/edit/{id}', 'AuctionController@edit')->name('editAuction');
-Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction')->middleware('auth');
-Route::get('auctions/{id}', 'AuctionController@show_my')->name('showMyAuction');
+Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction');
+Route::get('auction/{id}', 'AuctionController@show_my')->name('showMyAuction');
 Route::post('auction/{id}/bid/delete', 'BidController@deleteHighestBid')->name('deleteBid')->middleware('auth');
 Route::post('auction/{id}/follow', 'UserFollowAuctionController@follow')->name('followAuction')->middleware('auth');
 Route::get('auction/followers/{id}', 'UserFollowAuctionController@list');
+
+//Comments
+Route::post('comment', 'CommentController@create')->name('createComment');
+Route::delete('comment/delete/{id}', 'CommentController@delete')->name('deleteComment');
+
 
 // Bid
 Route::get('bid/makeBid/{id}', 'BidController@makeBidForm')->name('makeBidForm')->middleware('auth');
@@ -82,12 +89,17 @@ Route::group(['prefix' => 'admin'], function () {
 Route::get('user/{id}/bidding-history', 'UserController@biddingHistory')->name('biddingHistory');
 Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ownedAuctions');
 
+//Payments
+Route::get('user/{id}/deposit', 'DepositController@showForm')->name('depositForm')->middleware('auth');
+Route::post('deposit', 'DepositController@processForm')->name('depositProcess')->middleware('auth');
+/*Route::post('user/{id}/deposit', 'DepositController@processForm')->name('depositProcess');
+Route::get('user/{id}/deposit/success', 'DepositController@success')->name('depositSuccess');
+Route::get('user/{id}/deposit/cancel', 'DepositController@cancel')->name('depositCancel');*/
+
 
 // Static Pages
 Route::get('about', 'StaticPagesController@getAboutUs')->name('about');
 Route::get('faq', 'StaticPagesController@getFaq')->name('faq');
-
-
 
 
 //Route::get('erro')->name('Error');

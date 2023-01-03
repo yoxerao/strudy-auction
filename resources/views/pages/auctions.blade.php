@@ -20,7 +20,7 @@
     <section id="list-auctions">
     @foreach ($auctions as $auction)
         <article class="auction">
-            <h1>{{ $auction->name }}</h1>
+            <a href="/auction/{{ $auction->id }}" > <h1> {{ $auction->name }} </h1> </a>
             <div class="timer" data-end-date="{{$auction->end_date}}">
             </div>
             <br>
@@ -51,6 +51,10 @@
             <a href="/auction/followers/{{ $auction->id }}">
                 <button> See Auction Followers </button>
             </a>
+            <form action="{{ route('deleteBid', $auction->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-danger">Remove Bid</button>
+            </form>
         </article>
     @endforeach
     </section>

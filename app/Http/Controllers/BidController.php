@@ -15,74 +15,72 @@ use DateTime;
 class BidController extends Controller
 {
 
-    /**
-     * Creates a new bid.
-     *
-     * @return Bid The bid created.
-     */
-    public function makeBid(Request $request, $id)
-    {
-      $auction = Auction::find($id);
-      
-      if($auction->user_id == Auth::user()->id) {
-        return redirect()->back()->with('error', 'You can not bid on your own auction');
-      }
-      
-      $highestBid = Bid::where('id_auction', $id)
-                        ->orderBy('value', 'desc')
-                        ->first();
+  /**
+   * Creates a new bid.
+   *
+   * @return Bid The bid created.
+   */
+  public function makeBid(Request $request, $id)
+  {
+    $auction = Auction::find($id);
 
-      if($request->input('value') >= $auction->min_bid && $request->input('value') <= $auction->buyout_value && $request->input('value') > $highestBid->value) {
-        $bid = new Bid();
-        $dt = new DateTime();
-
-        $bid->value = $request->input('value');
-        $bid->date = $dt->format('Y-m-d H:i:s');
-        if($request->input('value') == $auction->buyout_value){
-          $bid->winner = true;
-          $auction->winner = Auth::user()->id;
-          $auction->save();
-        }
-        else {
-          $bid->winner = false;
-        }
-        $bid->user_id = Auth::user()->id;
-        $bid->id_auction = $id;
-        $bid->save();
-
-        $alreadyFollow = UserFollowAuction::where('id_user', Auth::id())
-                                            ->where('id_auction', $id)
-                                            ->first();
-        
-        if($alreadyFollow == null) {
-         
-          $idUser = Auth::id();
-          $data=array('id_user'=>$idUser, 'id_auction'=>$id);
-          DB::table('user_follow_auction')->insert($data);
-        }
-      }
-      else {
-        return redirect()->back()->with('error', 'You can not bid lower than minimum bid or higher than the buyout');
-      }
-      return redirect("/auctions");
+    if ($auction->user_id == Auth::user()->id) {
+      return redirect()->back()->with('error', 'You can not bid on your own auction');
     }
 
-    public function makeBidForm($id)
-    {
-      $auction =  Auction::find($id);
+    $highestBid = Bid::where('id_auction', $id)
+      ->orderBy('value', 'desc')
+      ->first();
 
-      return view('pages.bid', ['auction' => $auction]);
+    if ($request->input('value') >= $auction->min_bid && $request->input('value') <= $auction->buyout_value && $request->input('value') > $highestBid->value) {
+      $bid = new Bid();
+      $dt = new DateTime();
+
+      $bid->value = $request->input('value');
+      $bid->date = $dt->format('Y-m-d H:i:s');
+      if ($request->input('value') == $auction->buyout_value) {
+        $bid->winner = true;
+        $auction->winner = Auth::user()->id;
+        $auction->save();
+      } else {
+        $bid->winner = false;
+      }
+      $bid->user_id = Auth::user()->id;
+      $bid->id_auction = $id;
+      $bid->save();
+
+      $alreadyFollow = UserFollowAuction::where('id_user', Auth::id())
+        ->where('id_auction', $id)
+        ->first();
+
+      if ($alreadyFollow == null) {
+
+        $idUser = Auth::id();
+        $data = array('id_user' => $idUser, 'id_auction' => $id);
+        DB::table('user_follow_auction')->insert($data);
+      }
+    } else {
+      return redirect()->back()->with('error', 'You can not bid lower than minimum bid or higher than the buyout');
     }
+    return redirect("/auctions");
+  }
 
-    public function deleteHighestBid($auctionId)
-    {
-        $highestBid = Bid::where('user_id', Auth::id())
-                        ->where('id_auction', $auctionId)
-                        ->orderBy('value', 'desc')
-                        ->first();
+  public function makeBidForm($id)
+  {
+    $auction =  Auction::find($id);
 
-        $highestBid->delete();
+    return view('pages.bid', ['auction' => $auction]);
+  }
 
-        return redirect('/auctions');
-    }
+  public function deleteHighestBid($auctionId)
+  {
+    $highestBid = Bid::where('user_id', Auth::id())
+      ->where('id_auction', $auctionId)
+      ->orderBy('value', 'desc')
+      ->first();
+
+    $highestBid->delete();
+
+    return redirect('/auctions');
+  }
 }
