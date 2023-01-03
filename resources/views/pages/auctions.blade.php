@@ -28,12 +28,28 @@
             <p>Buyout: {{ $auction->buyout_value }}</p>
             <p>Min Bid: {{ $auction->min_bid }}</p>
             <p>Winner: {{ $auction->winner }}</p>
-            <a href="/auction/edit/{{ $auction->id }}">
-                <button> Edit or Delete Auction </button>
-            </a>
-            <p></p>
-            <a href="/bid/makeBid/{{ $auction->id }}">
-                <button> Make Bid </button>
+            
+            @if (Auth::check())
+                @if (Auth::user()->id == $auction->user_id)
+                    <a href="/auction/edit/{{ $auction->id }}">
+                        <button> Edit or Delete Auction </button>
+                    </a>
+                    <p></p>
+                @endif
+                <a href="/bid/makeBid/{{ $auction->id }}">
+                    <button> Make Bid </button>
+                </a>
+                <form action="{{ route('deleteBid', $auction->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Remove Bid</button>
+                </form>
+                <form action="{{ route('followAuction', $auction->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Follow Auction</button>
+                </form>
+            @endif
+            <a href="/auction/followers/{{ $auction->id }}">
+                <button> See Auction Followers </button>
             </a>
             <form action="{{ route('deleteBid', $auction->id) }}" method="POST">
                 @csrf

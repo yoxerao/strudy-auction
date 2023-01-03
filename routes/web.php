@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Models\User;
 use App\Models\Report;
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +29,9 @@ Route::get('auction/edit/{id}', 'AuctionController@editForm')->name('editAuction
 Route::put('auction/edit/{id}', 'AuctionController@edit')->name('editAuction');
 Route::delete('auction/delete/{id}', 'AuctionController@delete')->name('deleteAuction');
 Route::get('auction/{id}', 'AuctionController@show_my')->name('showMyAuction');
-Route::post('auction/{id}/bid/delete', 'BidController@deleteHighestBid')->name('deleteBid');
+Route::post('auction/{id}/bid/delete', 'BidController@deleteHighestBid')->name('deleteBid')->middleware('auth');
+Route::post('auction/{id}/follow', 'UserFollowAuctionController@follow')->name('followAuction')->middleware('auth');
+Route::get('auction/followers/{id}', 'UserFollowAuctionController@list');
 
 //Comments
 Route::post('comment', 'CommentController@create')->name('createComment');
@@ -35,7 +39,7 @@ Route::delete('comment/delete/{id}', 'CommentController@delete')->name('deleteCo
 
 
 // Bid
-Route::get('bid/makeBid/{id}', 'BidController@makeBidForm')->name('makeBidForm');
+Route::get('bid/makeBid/{id}', 'BidController@makeBidForm')->name('makeBidForm')->middleware('auth');
 Route::post('bid/makeBid/{id}', 'BidController@makeBid')->name('makeBid');
 
 // API
@@ -84,6 +88,13 @@ Route::group(['prefix' => 'admin'], function () {
 //listings
 Route::get('user/{id}/bidding-history', 'UserController@biddingHistory')->name('biddingHistory');
 Route::get('user/{id}/owned-auctions', 'UserController@ownedAuctions')->name('ownedAuctions');
+
+//Payments
+Route::get('user/{id}/deposit', 'DepositController@showForm')->name('depositForm')->middleware('auth');
+Route::post('deposit', 'DepositController@processForm')->name('depositProcess')->middleware('auth');
+/*Route::post('user/{id}/deposit', 'DepositController@processForm')->name('depositProcess');
+Route::get('user/{id}/deposit/success', 'DepositController@success')->name('depositSuccess');
+Route::get('user/{id}/deposit/cancel', 'DepositController@cancel')->name('depositCancel');*/
 
 
 // Static Pages
