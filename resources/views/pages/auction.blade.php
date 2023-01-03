@@ -7,12 +7,10 @@
 <section id=auction>
     <article class="auction">
         <h1>{{ $auction['name'] }}</h1>
+        <div class="timer" data-end-date="{{$auction['end_date']}}"></div>
         <p>{{ $auction['description'] }}</p>
         <p>Buyout: {{ $auction['buyout_value'] }}</p>
         <p>Min Bid: {{ $auction['min_bid'] }}</p>
-        <p>Start Date: {{ $auction['start_date'] }}</p>
-        <div id="timer" data-end-date="{{$auction['end_date']}}"></div>
-        <p>End Date: {{ $auction['end_date'] }}</p>
         <p>Winner: {{ $auction['winner'] }}</p>
         <p>Owner: {{ $auction['user_id'] }}</p>
         <a href="/auction/edit/{{ $auction['id'] }}">
@@ -26,7 +24,7 @@
 </section>
 
 <section id=commment>
-    <h4> Comments </h4>
+    <h3> Comments </h3>
 @foreach ($comments as $comment)
     <article class="comment">
         <p>Author: {{ $comment['author'] }}</p>
@@ -35,6 +33,7 @@
         <form method="POST" action="{{ route('deleteComment', $comment->id) }}">
             @csrf
             @method('DELETE')
+            <input type="hidden" name="id_auction" value="{{  $auction['id'] }}" />
             <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>
                 Delete
             </button>

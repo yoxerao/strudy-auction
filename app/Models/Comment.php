@@ -16,6 +16,8 @@ class Comment extends Model
         'author', 'id_auction', 'creation_date', 'content'
     ];
 
-
+    public function author() {
+        return $this->belongsTo(User::class);
+    }
 
 }

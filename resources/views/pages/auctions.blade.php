@@ -21,13 +21,14 @@
     @foreach ($auctions as $auction)
         <article class="auction">
             <a href="/auction/{{ $auction->id }}" > <h1> {{ $auction->name }} </h1> </a>
+            <div class="timer" data-end-date="{{$auction->end_date}}">
+            </div>
+            <br>
             <p>{{ $auction->description }}</p>
             <p>Buyout: {{ $auction->buyout_value }}</p>
             <p>Min Bid: {{ $auction->min_bid }}</p>
-            <p>Start Date: {{ $auction->start_date }}</p>
-            <p>End Date: {{ $auction->end_date }}</p>
             <p>Winner: {{ $auction->winner }}</p>
-            <p>Owner: {{ $auction->user_id }}</p>
+
         </article>
     @endforeach
     </section>

@@ -15,6 +15,8 @@ class CommentController extends Controller
 
   public function create(Request $request) {
 
+    $this->authorize('create', Comment::class);
+
     $dt = new DateTime();
 
     $comment = new Comment();
@@ -24,7 +26,6 @@ class CommentController extends Controller
     $comment->creation_date = $dt->format('Y-m-d H:i:s');
     $comment->content = $request->content;
 
-    
     $comment->save();
 
     return redirect("/auction/{$request->id_auction}");
@@ -32,16 +33,13 @@ class CommentController extends Controller
 
   public function delete(Request $request, $id)
   {
-    $user = User::find($id);
-    if (is_null($user))
-      return abort(404, 'User not found, id: ' . $id);
-
-    $this->authorize('delete', $user);
-
     $comment =  Comment::find($id);
+    
+    $this->authorize('delete', $comment);
+
     $comment->delete();
 
-    return redirect("/auction/{$id}");
+    return redirect("/auction/{$request->id_auction}");
   }
 
 }
