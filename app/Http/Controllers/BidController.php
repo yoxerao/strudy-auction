@@ -21,16 +21,37 @@ class BidController extends Controller
      */
     public function makeBid(Request $request, $id)
     {
-      $bid = new Bid();
-      $dt = new DateTime();
+      $auction = Auction::find($id);
+      
+      if($auction->user_id == Auth::user()->id) {
+        return redirect()->back()->with('error', 'You can not bid on your own auction');
+      }
+      
+      $highestBid = Bid::where('id_auction', $id)
+                        ->orderBy('value', 'desc')
+                        ->first();
 
-      $bid->value = $request->input('value');
-      $bid->date = $dt->format('Y-m-d H:i:s');
-      $bid->winner = false;
-      $bid->user_id = Auth::user()->id;
-      $bid->id_auction = $id;
-      $bid->save();
+      if($request->input('value') >= $auction->min_bid && $request->input('value') <= $auction->buyout_value && $request->input('value') > $highestBid->value) {
+        $bid = new Bid();
+        $dt = new DateTime();
 
+        $bid->value = $request->input('value');
+        $bid->date = $dt->format('Y-m-d H:i:s');
+        if($request->input('value') == $auction->buyout_value){
+          $bid->winner = true;
+          $auction->winner = Auth::user()->id;
+          $auction->save();
+        }
+        else {
+          $bid->winner = false;
+        }
+        $bid->user_id = Auth::user()->id;
+        $bid->id_auction = $id;
+        $bid->save();
+      }
+      else {
+        return redirect()->back()->with('error', 'You can not bid lower than minimum bid or higher than the buyout');
+      }
       return redirect("/auctions");
     }
 
@@ -39,5 +60,17 @@ class BidController extends Controller
       $auction =  Auction::find($id);
 
       return view('pages.bid', ['auction' => $auction]);
+    }
+
+    public function deleteHighestBid($auctionId)
+    {
+        $highestBid = Bid::where('user_id', Auth::id())
+                        ->where('id_auction', $auctionId)
+                        ->orderBy('value', 'desc')
+                        ->first();
+
+        $highestBid->delete();
+
+        return redirect('/auctions');
     }
 }

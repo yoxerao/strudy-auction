@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Bid;
 use App\Models\User;
+use App\Models\Report;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class UserController extends Controller
 {
@@ -145,5 +147,31 @@ class UserController extends Controller
 
         return view('pages.ownedAuctions', compact('auctions'));
     }
+
+    public function reportForm(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (is_null($user)){
+            return abort(404, 'User not found id:'. $id);
+        }
+
+        return view('pages.report', ['user' => $user]);
+    }
+
+    public function reportPost(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'reason' => 'required|string',
+        ]);
+
+        $report = new Report;
+        $report->reported = $id;
+        $report->reason = $validatedData['reason'];
+        $report->author = Auth::id();
+        $report->save();
+
+        return redirect('/user/' . $id)->with('success', 'Your report has been submitted.');
+    }
+
 
 }

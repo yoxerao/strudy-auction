@@ -23,7 +23,8 @@ CREATE TABLE users (
     username TEXT NOT NULL CONSTRAINT user_username_uk UNIQUE,
     email TEXT NOT NULL CONSTRAINT user_email_uk UNIQUE,
     password TEXT NOT NULL,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    deleted_at TIMESTAMP
 );
 
 CREATE TABLE auction (
@@ -35,7 +36,8 @@ CREATE TABLE auction (
     start_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     end_date TIMESTAMP WITH TIME ZONE NOT NULL,
     winner INTEGER REFERENCES users (id) ON UPDATE CASCADE,
-    user_id INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE
+    user_id INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE,
+    deleted_at TIMESTAMP
 );
 
 
@@ -53,7 +55,8 @@ CREATE TABLE bid (
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     winner BOOLEAN NOT NULL DEFAULT FALSE,
     user_id INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE,
-    id_auction INTEGER NOT NULL REFERENCES auction (id) ON UPDATE CASCADE
+    id_auction INTEGER NOT NULL REFERENCES auction (id) ON UPDATE CASCADE,
+    deleted_at TIMESTAMP
 );
 
 CREATE TABLE deposit (
@@ -118,7 +121,8 @@ CREATE TABLE comment (
     author INTEGER NOT NULL REFERENCES users (id) ON UPDATE CASCADE,
     id_auction INTEGER NOT NULL REFERENCES auction (id) ON UPDATE CASCADE,
     creation_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    content TEXT NOT NULL
+    content TEXT NOT NULL,
+    deleted_at TIMESTAMP
 );
 
 
@@ -334,7 +338,7 @@ insert into administrator (username, email, password, name) values ('sbentson0',
 insert into users (balance, rating, blocked, banned, terminated, username, email, password, name) values (2828.88, 2.42, false, false, false, 'lkrebs0', 'lkrebs0@comsenz.com', 'KJH6ZuMqThbV', 'Lilly Krebs');
 insert into users (balance, rating, blocked, banned, terminated, username, email, password, name) values (8004.5, null, true, true, false, 'rscoines1', 'rscoines1@blogger.com', '5KnFC0qwFS', 'Russ Scoines');
 
-insert into auction (name, buyout_value, min_bid, description, start_date, end_date, winner, user_id) values ('mock item 1', 701.31, 81.42, 'This is an item description', '2022-10-30', '2022-11-01', null, 1);
+insert into auction (name, buyout_value, min_bid, description, start_date, end_date, winner, user_id) values ('mock item 1', 701.31, 81.42, 'This is an item description', '2022-10-30', '2023-11-01', null, 1);
 
 insert into image (path_name, id_auction, id_user) values ('http://dummyimage.com/210x249.png/5fa2dd/ffffff', 1, null);
 insert into image (path_name, id_auction, id_user) values ('http://dummyimage.com/102x186.png/5fa2dd/ffffff', null, 1);
