@@ -1,7 +1,7 @@
   openapi: 3.0.0
 
   info:
-    version: '1.0'
+    version: '2.0'
     title: 'LBAW eAuction Web API'
     description: 'Web Resources Specification (A7) for eAuction'
 
@@ -34,7 +34,7 @@
           - 'M01: Authentication'
         responses:
           '200':
-            description: 'Ok. Show Log-q UI'
+            description: 'Ok. Show Log-in UI'
 
       post:
         operationId: R102
@@ -124,16 +124,18 @@
                     type: string
                   email:
                     type: string
-                  picture:
-                    type: string
-                    format: binary
                   password:
                     type: string
+                    format: password
+                  confirmPassword:
+                    type: string
+                    format: password
                 required:
                   - name
                   - username
                   - email
                   - password
+                  - confirmPassword
 
         responses:
           '302':
@@ -144,8 +146,8 @@
                   type: string
                 examples:
                   302Success:
-                    description: 'Successful registration. Redirect to user profile.'
-                    value: '/users/{id}'
+                    description: 'Successful registration. Redirect to home page.'
+                    value: '/'
                   302Failure:
                     description: 'Failed registration. Redirect to sign-up form.'
                     value: '/register'
@@ -194,10 +196,55 @@
                     value: '/login'
                   302Failure:
                     description: 'Failed to recover password . Redirect to recovery form.'
-                    value: '/recovery'
+                    value: '/login'
+    /admin/login:
+      get:
+        operationId: R108
+        summary: 'R108: Admin Login Form'
+        description: 'Provide  admin login form. Access: PUB'
+        tags:
+          - 'M01: Authentication'
+        responses:
+          '200':
+            description: 'Ok. Show Admin Log-in UI'
 
+      post:
+        operationId: R109
+        summary: 'R109: Admin Login Action'
+        description: 'Processes the admin login form submission. Access: PUB'
+        tags:
+          - 'M01: Authentication'
+        requestBody:
+          required: true
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+                    format: password
+                required:
+                  - username
+                  - password  
+        responses:
+          '302':
+            description: 'Redirect after processing the login credentials.'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Successful authentication. Redirect to homepage.'
+                    value: '/admin'
+                  302Failure:
+                    description: 'Failed authentication. Redirect to login form.'
+                    value: '/admin/login'  
   #------------------------------- Profile and User Information -------------------------------
-    /users/{id}:
+    /user/{id}:
       # view profile
       get:
         operationId: R201
@@ -217,7 +264,7 @@
           '200':
             description: 'Ok. Show user profile.'
 
-    /users/{id}/edit:
+    /user/{id}/edit:
       # edit profile
       put:
         operationId: R202
@@ -242,9 +289,11 @@
                 properties:
                   name:
                     type: string
-                  picture:
+                  username:
                     type: string
-                    format: binary
+                required:
+                  - name
+                  - username
 
         responses:
           '302':
@@ -256,16 +305,33 @@
                 examples:
                   302Success:
                     description: 'Successfully edited user profile. Redirect to user profile.'
-                    value: '/users/{id}'
+                    value: '/user/{id}'
                   302Failure:
                     description: 'Failed to edit user profile. Redirect to user profile.'
-                    value: '/users/{id}'
-    #change user pwd
-    /users/{id}/change-password:
-      patch:
+                    value: '/user/{id}'
+ 
+    /user/{id}/editpass:
+      get:
         operationId: R203
-        summary: 'R203: Change Password Action'
-        description: 'Processes the change user password form submission. Access: USR'
+        summary: 'R203: View Edit Pass Form'
+        description: 'View Edit Pass Form. Access: USR'
+        tags:
+          - 'M02: Profile and User Information'
+
+        parameters:
+          - in: path
+            name: id
+            schema:
+              type: integer
+            required: true
+
+        responses:
+          '200':
+            description: 'Ok. Show edit pass form.'
+      put:
+        operationId: R204
+        summary: 'R204: Edit Pass Action'
+        description: 'Processes the pass edition form submission: USR'
         tags:
           - 'M02: Profile and User Information'
         
@@ -282,15 +348,15 @@
               schema:
                 type: object
                 properties:
-                  oldPwd:
-                    type: string
-                    format: password
                   newPwd:
                     type: string
                     format: password
+                  confirmNewPwd:
+                    type: string
+                    format: password
                 required:
-                  - oldPwd
-                  - newPwd  
+                  - newPwd
+                  - ConfirNewPwd  
         responses:
           '303':
             description: 'Redirect after change password action.'
@@ -305,37 +371,6 @@
                   303Error:
                     description: 'Failed to change password. Redirect to edit page.'
                     value: '/users/{id}/change-password'
-    #delete user
-    /users/{id}/delete:
-      patch:
-        operationId: R204
-        summary: 'R204: Delete user'
-        description: 'Delete user. Access: USR'
-        tags:
-          - 'M02: Profile and User Information'
-        
-        parameters:
-          - in: path
-            name: id
-            schema:
-              type: integer
-            required: true
-            
-        responses:
-          '303':
-            description: 'Redirect after delete user action.'
-            headers:
-              Location:
-                schema:
-                  type: string
-                examples:
-                  303Success:
-                    description: 'successfully deleted user. Redirect to home page.'
-                    value: '/'
-                  303Error:
-                    description: 'Failed to delete user. Redirect to delete user page.'
-                    value: '/users/{id}/delete'
-
   #------------------------------- Auctions -------------------------------
 
     #view auction
@@ -351,81 +386,12 @@
           '200':
             description: 'Ok. Show auctions'
 
-    #search auctions        
-    /api/auctions:
+    #search auctions    
+    
+    /auction/{id}: 
       get:
         operationId: R302
-        summary: 'R302: Search Auctions'
-        description: 'Show the auction search form. Access: PUB'
-        tags:
-          - 'M03: Auctions'
-
-        parameters:
-          - in: query
-            name: query
-            description: Full-text search string
-            schema:
-              type: string
-            required: false
-          - in: query
-            name: category
-            description: Category of the item
-            schema:
-              type: string
-            required: false
-          - in: query
-            name: max_price
-            description: Max buyout price
-            schema:
-              type: integer
-            required: false
-          - in: query
-            name: min_price
-            description: Min buyout price
-            schema:
-              type: integer
-            required: false
-          - in: query
-            name: max_bid
-            description: Max bid price
-            schema:
-              type: integer
-            required: false
-          - in: query
-            name: min_bid
-            description: Min bid price
-            schema:
-              type: integer
-            required: false
-
-        responses:
-          '200':
-            description: 'Success'
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      time:
-                        type: string
-                        format: date-time
-                      bid:
-                        type: integer
-                      picture:
-                        type: string
-                        format: binary
-                      description:
-                        type: string
-
-    # view specific auction
-    /auctions/{id}: 
-      get:
-        operationId: R303
-        summary: 'R303: View Auction'
+        summary: 'R302: View Auction'
         description: 'Show the individual auction. Access: PUB'
         tags:
           - 'M03: Auctions'
@@ -438,10 +404,11 @@
         responses:
           '200':
             description: 'Ok. Show auction'
-          
+
+    /auction/delete/{id}:  
       delete:
-        operationId: R304
-        summary: 'R304: Delete Auction Action'
+        operationId: R303
+        summary: 'R303: Delete Auction Action'
         description: 'Processes the delete auction request. Access: OWN'
         tags:
           - 'M03: Auctions'
@@ -463,10 +430,28 @@
                 examples:
                   302Success:
                     description: 'Successfully deleted auction. Redirecting to home page.'
-                    value: '/'
+                    value: '/auctions'
                   302Failure:
                     description: 'Failed to delete auction. Redirect to auction page.'
-                    value: '/auctions/{id}'
+                    value: '/auction/{id}'
+
+    /auction/edit/{id}:
+      get:
+        operationId: R304
+        summary: 'R304: View Auction Edit Form'
+        description: 'Show the auction edit form. Access: OWN'
+        tags:
+          - 'M03: Auctions'
+        parameters:
+          - in: path
+            name: id
+            schema:
+              type: integer
+            required: true
+        responses:
+          '200':
+            description: 'Ok. Show auction'
+    
       put:
         operationId: R305
         summary: 'R305: Edit Auction Action'
@@ -488,27 +473,10 @@
               schema:
                 type: object
                 properties:
-                  auctionTitle:
+                  name:
                     type: string
-                  categories:
-                    type: array
-                    items:
-                      type: string
                   description:
                     type: string
-                  startTime:
-                    type: object
-                  endTime:
-                    type: object
-                  startingBid:
-                    type: integer
-                  buyout:
-                    type: integer
-                  pictures:
-                    type: array
-                    items:
-                      type: integer
-                      format: binary
         responses:
           '302':
             description: 'Redirect after processing edit form.'
@@ -519,12 +487,12 @@
                 examples:
                   302Success:
                     description: 'Successfully edited auction. Redirecting to auction page.'
-                    value: '/auctions/{id}'
+                    value: '/auctions'
                   302Failure:
-                    description: 'Failed to edit auction. Redirecting to auction page.'
-                    value: '/auctions/{id}'
+                    description: 'Failed to edit auction. Redirecting to auction edit page.'
+                    value: '/auction/edit/{id}'
 
-    /auctions/new-auction:
+    /auctions/create:
       get:
         operationId: R306
         summary: 'R306: Create Auction'
@@ -550,36 +518,25 @@
               schema:
                 type: object
                 properties:
-                  auctionTitle:
+                  name:
                     type: string
-                  categories:
-                    type: array
-                    items:
-                      type: string
                   description:
                     type: string
-                  startTime:
+                  start_date:
                     type: object
-                  endTime:
+                  end_date:
                     type: object
-                  startingBid:
+                  min_bid:
                     type: integer
-                  buyout:
+                  buyout_value:
                     type: integer
-                  pictures:
-                    type: array
-                    items:
-                      type: integer
-                      format: binary
                 required:
-                  - auctionTitle
-                  - categories
+                  - name
                   - description
-                  - startTime
-                  - endTime
-                  - startingBid
-                  - buyout
-                  - pictures
+                  - start_date
+                  - end_date
+                  - min_bid
+                  - buyout_value
         responses:
           '302':
             description: 'Redirect after processing new auction form.'
@@ -590,18 +547,28 @@
                 examples:
                   302Success:
                     description: 'Successfully created auction. Redirecting to auction page.'
-                    value: '/auctions/{id}'
+                    value: '/auctions'
                   302Failure:
                     description: 'Failed to create auction. Redirect to auction creation page.'
-                    value: '/auctions/new-auction'
+                    value: '/auction/create'
 
   #------------------------------- User Interaction -------------------------------
 
   # add bid
-    /auctions/{id}/bids:
-      post:
+    /bid/makeBid/{id}:
+      get:
         operationId: R401
-        summary: 'R401: Add Bid to Auction Action'
+        summary: 'R401: Show Bid Ui'
+        description: 'View bid UI. Access: USR'
+        tags:
+          - 'M04: User Interaction'
+
+        responses:
+          '200':
+            description: 'Ok. Show bid UI'
+      post:
+        operationId: R402
+        summary: 'R402: Add Bid to Auction Action'
         description: 'Processes the add bid to auction request. Access: USR'
         tags:
           - 'M04: User Interaction'
@@ -620,7 +587,7 @@
               schema:
                 type: object
                 properties:
-                  bid:
+                  value:
                     type: number
                 required:
                 - bid
@@ -634,17 +601,17 @@
                 examples:
                   302Success:
                     description: 'Successfully placed a bid. Redirecting to auction page.'
-                    value: '/auctions/{id}'
+                    value: '/auctions'
                   302Failure:
                     description: 'Failed to bid. Redirecting to auction page.'
-                    value: '/auctions/{id}'
+                    value: '/auctions'
 
     # add comment
-    /auctions/{id}/comments:
+    /comments:
       post:
-        operationId: R402
-        summary: 'R402: Add Comment to Auction Action'
-        description: 'Processes adding comment to auction request. Access: USR, OWN'
+        operationId: R403
+        summary: 'R403: Add Comment to Auction Action'
+        description: 'Processes adding comment to auction request. Access: USR, OWN, ADM'
         tags:
           - 'M04: User Interaction'
 
@@ -662,10 +629,10 @@
               schema:
                 type: object
                 properties:
-                  comment:
+                  content:
                     type: string
                 required:
-                - comment
+                - content
         responses:
           '302':
             description: 'Redirect after processing comment request.'
@@ -676,15 +643,15 @@
                 examples:
                   302Success:
                     description: 'Successfully commented on auction. Redirecting to auction page.'
-                    value: '/auctions/{id}'
+                    value: '/auction/{id}'
                   302Failure:
                     description: 'Failed to comment on auction. Redirecting to auction page.'
-                    value: '/auctions/{id}'
+                    value: '/auction/{id}'
     # follow auction
-    /auctions/{id}/follow:
+    /auction/{id}/follow:
       post:
-        operationId: R403
-        summary: 'R403: Follow Auction Action'
+        operationId: R404
+        summary: 'R404: Follow Auction Action'
         description: 'Processes the auction follow request. Access: USR'
         tags:
           - 'M04: User Interaction'
@@ -706,44 +673,17 @@
                 examples:
                   302Success:
                     description: 'Successfully followed auction. Redirecting to auction page.'
-                    value: '/auctions/{id}'
+                    value: '/auctions'
                   302Failure:
                     description: 'Failed to follow auction. Redirecting to auction page.'
-                    value: '/auctions/{id}'
-      delete:
-        operationId: R404
-        summary: 'R404: Unfollow Auction Action'
-        description: 'Processes the auction remove favourite request. Access: USR'
-        tags:
-          - 'M04: User Interaction'
+                    value: '/auctions'
 
-        parameters:
-          - in: path
-            name: id
-            schema:
-              type: integer
-            required: true
 
-        responses:
-          '302':
-            description: 'Redirect after unfollowing auction.'
-            headers:
-              Location:
-                schema:
-                  type: string
-                examples:
-                  302Success:
-                    description: 'Successfully unfollowed auction. Redirecting to auction page.'
-                    value: '/auctions/{id}'
-                  302Failure:
-                    description: 'Failed to unfollow auction. Redirecting to auction page.'
-                    value: '/auctions/{id}'
-    #rate user
-    /users/{id}/rate:
+    /auction/{id}/bid/delete:
       post:
         operationId: R405
-        summary: 'R405: Rate User Action'
-        description: 'Processes the rate user request. Access: USR'
+        summary: 'R405: Follow Auction Action'
+        description: 'Processes the auction follow request. Access: USR'
         tags:
           - 'M04: User Interaction'
 
@@ -753,72 +693,35 @@
             schema:
               type: integer
             required: true
-        requestBody:
-          required: true
-          content:
-            application/x-www-form-urlencoded:
-              schema:
-                type: object
-                properties:
-                  rating:
-                    type: integer
-                required:
-                - rating
+
         responses:
           '302':
-            description: 'Redirect after rating.'
+            description: 'Redirect after deleting bid.'
             headers:
               Location:
                 schema:
                   type: string
                 examples:
                   302Success:
-                    description: 'Successfully rated user. Redirecting to user profile.'
-                    value: '/users/{id}'
+                    description: 'Successfully removed bid. Redirecting to auction page.'
+                    value: '/auctions'
                   302Failure:
-                    description: 'Failed to rate user. Redirecting to user profile.'
-                    value: '/users/{id}'
+                    description: 'Failed to remove bid. Redirecting to auction page.'
+                    value: '/auctions'
+        
 
-      put:
+    /user/{id}/report:
+      get:
         operationId: R406
-        summary: 'R406: Edit User Rating Action'
-        description: 'Processes the rate user edit request. Access: USR'
+        summary: 'R406: Show Report Form'
+        description: 'View report form UI. Access: USR'
         tags:
           - 'M04: User Interaction'
 
-        parameters:
-          - in: path
-            name: id
-            schema:
-              type: integer
-            required: true
-        requestBody:
-          required: true
-          content:
-            application/x-www-form-urlencoded:
-              schema:
-                type: object
-                properties:
-                  rating:
-                    type: integer
-                required:
-                - rating
         responses:
-          '302':
-            description: 'Redirect after rating.'
-            headers:
-              Location:
-                schema:
-                  type: string
-                examples:
-                  302Success:
-                    description: 'Successfully updated rating. Redirecting to user profile.'
-                    value: '/users/{id}'
-                  302Failure:
-                    description: 'Failed to update rating. Redirecting to user profile.'
-                    value: '/users/{id}'
+          '200':
+            description: 'Ok. Show report form UI'
 
-    /users/{id}/report:
       post:
         operationId: R407
         summary: 'R407: Report User Action'
@@ -853,18 +756,18 @@
                 examples:
                   302Success:
                     description: 'Successfully reported user. Redirecting to user profile.'
-                    value: '/users/{id}'
+                    value: '/user/{id}'
                   302Failure:
                     description: 'Failed to report user. Redirecting to user profile.'
-                    value: '/users/{id}'
+                    value: '/user/{id}'
 
   #------------------------------- Listings -------------------------------
     #show followed auctions
-    /users/{id}/followed:
+    /user/{id}/bidding-history:
       get:
         operationId: R501
-        summary: 'R501: List Followed Auctions'
-        description: 'Show the followed auctions listing. Access: USR'
+        summary: 'R501: List Bidding History'
+        description: 'Show the all bids made. Access: USR'
         tags:
           - 'M05: Listings'
 
@@ -872,37 +775,11 @@
           '200':
             description: 'Ok. Show followed auctions'
 
-    #show auctions currently participating in (owner or bidding)
-    /users/{id}/current-auctions:
-      get:
-        operationId: R502
-        summary: 'R502: List Current Auctions'
-        description: 'Show the current auctions the user is participating in. Access: USR'
-        tags:
-          - 'M05: Listings'
-
-        responses:
-          '200':
-            description: 'Ok. Show current auctions'
-
-    #show past auctions the user bid on / boughtout 
-    /users/{id}/auction-history:
-      get:
-        operationId: R503
-        summary: 'R503: List Auction History'
-        description: 'Show the past auctions the user bid on / boughtout. Access: USR'
-        tags:
-          - 'M05: Listings'
-
-        responses:
-          '200':
-            description: 'Ok. Show auction history'
-
     #show auctions the user owned/owns
     /users/{id}/owned-auctions:
       get:
-        operationId: R504
-        summary: 'R504: List Owned Auctions'
+        operationId: R502
+        summary: 'R502: List Owned Auctions'
         description: 'Show the auctions the user owns/owned. Access: USR'
         tags:
           - 'M05: Listings'
@@ -911,38 +788,49 @@
           '200':
             description: 'Ok. Show owned auctions'
 
-  #------------------------------- User and auction administration -------------------------------
+    /auction/followers/{id}:
+      get:
+        operationId: R503
+        summary: 'R503: List Auction Followers'
+        description: 'Show users that follow the auction. Access: PUB'
+        tags:
+          - 'M05: Listings'
 
+        responses:
+          '200':
+            description: 'Ok. Show following users'
+  #------------------------------- User and auction administration -------------------------------
+    /admin:
+      get:
+        operationId: R601
+        summary: 'R601: Admin Home Page'
+        description: 'Show the admin home page. Access: ADM'
+        tags:
+          - 'M06: User and Auction Administration'
+
+        responses:
+          '200':
+            description: 'Ok. Show admin home page'
     # admin page
     /admin/{id}:
       get:
-        operationId: R601
-        summary: 'R601: Admin Page'
-        description: 'Show the admin page. Access: ADM'
-        tags:
-          - 'M06: User and Auction Administration'
-
-        responses:
-          '200':
-            description: 'Ok. Show admin page'
-    #reports listing
-    /admin/{id}/reports:
-      get:
         operationId: R602
-        summary: 'R602: List Reported Users'
-        description: 'Show the reported users. Access: ADM'
+        summary: 'R602: Admin Profile'
+        description: 'Show the admin profile page. Access: ADM'
         tags:
           - 'M06: User and Auction Administration'
 
         responses:
           '200':
-            description: 'Ok. Show reported users listing'
+            description: 'Ok. Show admin profile page'
+    #reports listing
 
-    /users/{id}/ban:
+    #*! ---------------------------------------------------------------------
+    /admin/{id}/validation:
       post:
         operationId: R603
-        summary: 'R603: Ban User Action'
-        description: 'Processes the ban user request. Access: ADM'
+        summary: 'R603: Validate Report Action'
+        description: 'Processes the validate report request. Access: ADM'
         tags:
           - 'M06: User and Auction Administration'
 
@@ -952,114 +840,21 @@
             schema:
               type: integer
             required: true
-        requestBody:
-          required: true
-          content:
-            application/x-www-form-urlencoded:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-                required:
-                - reason
+
         responses:
           '302':
-            description: 'Redirect after banning.'
+            description: 'Redirect after following.'
             headers:
               Location:
                 schema:
                   type: string
                 examples:
                   302Success:
-                    description: 'Successfully banned user. Redirecting to admin page.'
-                    value: '/admin/{id}'
+                    description: 'Successfully validated report. Redirecting to admin page.'
+                    value: '/admin'
                   302Failure:
-                    description: 'Failed to ban user. Redirecting to admin page.'
-                    value: '/admin/{id}'
-
-    /users/{id}/block:
-      post:
-        operationId: R604
-        summary: 'R604: Block User Action'
-        description: 'Processes the block user request. Access: ADM'
-        tags:
-          - 'M06: User and Auction Administration'
-
-        parameters:
-          - in: path
-            name: id
-            schema:
-              type: integer
-            required: true
-        requestBody:
-          required: true
-          content:
-            application/x-www-form-urlencoded:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-                  endTime:
-                    type: object
-                required:
-                - reason
-                - endTime
-        responses:
-          '302':
-            description: 'Redirect after blocking.'
-            headers:
-              Location:
-                schema:
-                  type: string
-                examples:
-                  302Success:
-                    description: 'Successfully blocked user. Redirecting to admin page.'
-                    value: '/admin/{id}'
-                  302Failure:
-                    description: 'Failed to block user. Redirecting to admin page.'
-                    value: '/admin/{id}'
-
-    /users/{id}/terminate:
-      post:
-        operationId: R605
-        summary: 'R605: Terminate Auction Action'
-        description: 'Processes the terminate auction request. Access: ADM'
-        tags:
-          - 'M06: User and Auction Administration'
-
-        parameters:
-          - in: path
-            name: id
-            schema:
-              type: integer
-            required: true
-        requestBody:
-          required: true
-          content:
-            application/x-www-form-urlencoded:
-              schema:
-                type: object
-                properties:
-                  reason:
-                    type: string
-                required:
-                - reason
-        responses:
-          '302':
-            description: 'Redirect after terminating auction.'
-            headers:
-              Location:
-                schema:
-                  type: string
-                examples:
-                  302Success:
-                    description: 'Successfully terminated auction. Redirecting to admin page.'
-                    value: '/admin/{id}'
-                  302Failure:
-                    description: 'Failed to terminate auction. Redirecting to admin page.'
-                    value: '/admin/{id}'
+                    description: 'Failed to validated report. Redirecting to admin page.'
+                    value: '/admin'
 
   #------------------------------- Static Pages -------------------------------
 
@@ -1088,14 +883,3 @@
         responses:
           '200':
             description: 'Ok. Show FAQ page'
-    /contact:
-      get:
-        operationId: R703
-        summary: 'R703: contact'
-        description: 'View the contact page. Access: PUB'
-        tags:
-          - 'M07: Static Pages'
-
-        responses:
-          '200':
-            description: 'Ok. Show contact page'

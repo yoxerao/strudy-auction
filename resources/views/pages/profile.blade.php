@@ -23,6 +23,8 @@
             <a class="btn btn-danger btn-lg" href="{{ route('editUser', ['id' => $user['id']]) }}">Edit profile</a>
             <a class="btn btn-danger btn-lg" href="{{ route('editPass', ['id' => $user['id']]) }}">Change password</a>
             <a class="button button-outline" href="{{ route('depositForm', ['id' => $user['id']]) }}">Deposit into account</a>
+            <a class="button button-outline" href="{{ route('biddingHistory', ['id' => $user['id']]) }}">Bidding History</a>
+            <a class="button button-outline" href="{{ route('ownedAuctions', ['id' => $user['id']]) }}">Owned Auctions</a>
         </div>
     @endif        
     </div>

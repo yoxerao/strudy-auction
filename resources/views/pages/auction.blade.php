@@ -14,24 +14,31 @@
             <p>Min Bid: {{ $auction['min_bid'] }}</p>
             <p>Winner: {{ $auction['winner'] }}</p>
             <p>Owner: {{ $auction['user_id'] }}</p>
+            @if (Auth::check())
             <div class="p-2 m-2 row">
-                <div class="col-md-2 ps-2">
-                    <a href="/auction/edit/{{ $auction['id'] }}">
-                        <button class="btn btn-danger"> Edit or Delete Auction </button>
-                    </a>
-                </div>
-                <div class="col-md-2 ps-2">
-                    <a href="/bid/makeBid/{{ $auction['id'] }}">
-                        <button class="btn btn-danger"> Make Bid </button>
-                    </a>
-                </div>
-                <div class="col-md-6 ps-2">
-                    <form action="{{ route('deleteBid', $auction['id']) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Remove Bid</button>
-                    </form>
-                </div>
+                @if (Auth::id() == $auction['user_id'])
+                    <div class="col-md-2 ps-2">
+                        <a href="/auction/edit/{{ $auction['id'] }}">
+                            <button class="btn btn-danger"> Edit or Delete Auction </button>
+                        </a>
+                    </div>
+                @endif
+                @if (Auth::id() != $auction['user_id'])
+                    
+                    <div class="col-md-2 ps-2">
+                        <a href="/bid/makeBid/{{ $auction['id'] }}">
+                            <button class="btn btn-danger"> Make Bid </button>
+                        </a>
+                    </div>
+                    <div class="col-md-6 ps-2">
+                        <form action="{{ route('deleteBid', $auction['id']) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Remove Bid</button>
+                        </form>
+                    </div>
+                @endif
             </div>
+            @endif
         </article>
     </div>
 </section>
