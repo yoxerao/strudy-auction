@@ -2,22 +2,16 @@
 
 namespace App\Models;
 
-
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class Notification extends Model
 {
-
-    use SoftDeletes;
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'comment';
-
-    protected $primaryKey = 'id';
+    protected $table = 'notification';
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
@@ -28,22 +22,13 @@ class Comment extends Model
      * @var array
      */
     protected $fillable = [
-        'date', 'content', 'id_auction', 'id_user',
+        'content', 'creation_date', 'seen', 'id_user',
     ];
 
     /**
-     * The user who made this comment.
+     * The user that received this notification.
      */
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo('App\Models\User');
-    }
-
-    /**
-     * The auction for this comment.
-     */
-    public function auction()
-    {
-        return $this->belongsTo('App\Models\Auction');
     }
 }

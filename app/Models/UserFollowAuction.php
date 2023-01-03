@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class Bid extends Model
+class UserFollowAuction extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'bid';
-
-    // * We want to keep a record of all bids on the bd because of the user history.
-    use SoftDeletes;
+    protected $table = 'user_follow_auction';
 
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
@@ -26,22 +22,20 @@ class Bid extends Model
      * @var array
      */
     protected $fillable = [
-        'value', 'date', 'winner', 'user_id', 'id_auction',
+        'id_user', 'id_auction',
     ];
 
     /**
-     * The user that made this bid.
+     * The user following this auction.
      */
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo('App\Models\User');
     }
 
     /**
-     * The auction this bid was made on.
+     * The auction being followed.
      */
-    public function auction()
-    {
+    public function auction() {
         return $this->belongsTo('App\Models\Auction');
     }
 }
