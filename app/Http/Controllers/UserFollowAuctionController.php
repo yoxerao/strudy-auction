@@ -16,10 +16,9 @@ class UserFollowAuctionController extends Controller
 
     if ($alreadyFollow == null) {
 
-      $userFollowAuction = new UserFollowAuction;
-      $userFollowAuction->id_user = Auth::id();
-      $userFollowAuction->id_auction = $idAuction;
-      $userFollowAuction->save();
+      $idUser =  Auth::id();
+      $data = array('id_user' => $idUser, 'id_auction' => $idAuction);
+      DB::table('user_follow_auction')->insert($data);
     }
 
     return redirect("/auctions");

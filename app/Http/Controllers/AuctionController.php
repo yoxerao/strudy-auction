@@ -9,6 +9,7 @@ use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\UserFollowAuction;
 use App\Models\Comment;
+use Illuminate\Support\Facades\DB;
 
 class AuctionController extends Controller
 {
@@ -63,10 +64,9 @@ class AuctionController extends Controller
 
     if ($alreadyFollow == null) {
 
-      $userFollowAuction = new UserFollowAuction;
-      $userFollowAuction->id_user = Auth::id();
-      $userFollowAuction->id_auction = $auction->id;
-      $userFollowAuction->save();
+      $idUser =  Auth::id();
+      $data = array('id_user' => $idUser, 'id_auction' => $auction->id);
+      DB::table('user_follow_auction')->insert($data);
     }
 
     return redirect("/auctions");
