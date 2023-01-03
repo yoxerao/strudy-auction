@@ -4,18 +4,22 @@
 
 @section('content')
 @if (Auth::check() && Auth::id() != $user['id'])
-    <button class="button button-outline" onclick="window.location.href='/user/{{ $user['id'] }}/report'">Report User</button>
+<div class="col-md-12 text-center">
+    <button class="btn btn-danger" onclick="window.location.href='/user/{{ $user['id'] }}/report'">Report User</button>
+</div>
 @endif
 
 <section id='userInfo'>
-    <h4 class="text-center">name: {{ $user['name'] }}</h4>
-    <h4 class="text-center">email: {{ $user['email'] }}</h4>
-    <h4 class="text-center">username: {{ $user['username'] }}</h4>
-    <h4 class="text-center">rating: {{ $user['rating'] }}</h4>
-    <h4 class="text-center">balance: {{ $user['balance'] }}</h4>
-    
-    <a class="button button-outline" href="{{ route('editUser', ['id' => $user['id']]) }}">Edit profile</a>
-    <a class="button button-outline" href="{{ route('editPass', ['id' => $user['id']]) }}">Change password</a>
-
+    <div class="d-flex flex-column align-items-center justify-content-between">
+        <div class="text-left text_size">name: {{ $user['name'] }}</div>
+        <div class="text-left text_size">email: {{ $user['email'] }}</div>
+        <div class="text-left text_size">username: {{ $user['username'] }}</div>
+        <div class="text-left text_size">rating: {{ $user['rating'] }}</div>
+        <div class="text-left text_size">balance: {{ $user['balance'] }}</div>
+        <div class="pt-5">
+            <a class="btn btn-danger btn-lg" href="{{ route('editUser', ['id' => $user['id']]) }}">Edit profile</a>
+            <a class="btn btn-danger btn-lg" href="{{ route('editPass', ['id' => $user['id']]) }}">Change password</a>
+        </div>
+    </div>
 </section>
 @endsection

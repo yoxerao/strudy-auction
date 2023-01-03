@@ -1,5 +1,5 @@
-body {
-  background-color: #ad8282;
+.body {
+  background-color: #fad2c7;
   color: #000000;
 }
 
@@ -8,7 +8,7 @@ main>header {
   grid-template-columns: 1fr auto auto;
   align-items: center;
   font-family: Georgia, serif;
-  height: 100px;
+  height: 5%;
   width: 100%;
 }
 
@@ -145,6 +145,7 @@ main>header span {
   html,
   body {
     margin: 0;
+    background-color: #ad8282;
     height: 100%;
   }
 
@@ -218,6 +219,86 @@ input[type=password]:focus {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 50px;
+  height: 10%;
+}
+
+.text_search {
+  display: grid;
+  place-items: center;
+  margin: 0;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.text_size {
+  font-size: 30px;
+}
+
+.createAuctionButton {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.auctionBox {
+  background-color: white;
+  height: 150%;
+}
+
+.editAuctionButton {
+  margin-top: 10px;
+  margin-left: 22px;
+}
+
+.makeBidButton {
+  margin-bottom: 20px;
+  margin-left: 22px;
+}
+
+.titleItem {
+  margin-top: 20px;
+}
+
+
+.height_btn {
+  margin-top: 10px;
+}
+
+.formulario {
+  length: 60%;
+  width: 60%;
+  margin-top: 10%;
+  margin-left: 23%;
+
+}
+
+.search-forms {
+  padding: 5px;
+  length: 100%;
+}
+
+.pass {
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.submit {
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.buttons_margin {
+  margin-top: 20px;
+}
+
+.textBox {
+  background-color: white;
+}
+
+
+
+.text_size {
+  font-size: 30px;
 
 }

@@ -21,32 +21,33 @@
   <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
   <script type="text/javascript" src={{ asset('js/timer.js') }} defer></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link href="<?php echo e(asset('css/homepage.css')); ?>" rel="stylesheet">
 </head>
 
-<body>
+<body class="body">
   <main>
-    <header>
-      <h1><a href="{{ url('/') }}">eAuction</a></h1>
+    <header class="p-3">
+      <h1><a class=" text-danger" href="{{ url('/') }}">eAuction</a></h1>
       @if (Auth::guard('admin')->check())
-      <a class="button" href="{{ url('/logout') }}"> Logout </a>
+      <a class="btn btn-danger btn-lg" href="{{ url('/logout') }}"> Logout </a>
       <a href="/user/{{ Auth::guard('admin')->user()->id }}"> {{ Auth::guard('admin')->user()->name }}</a>
       @elseif (Auth::check())
-      <a class="button" href="{{ url('/logout') }}"> Logout </a>
-      <a href="/user/{{ Auth::user()->id }}"> {{ Auth::user()->name }}</a>
+      <a class="btn btn-danger btn-lg" href="{{ url('/logout') }}"> Logout </a>
+      <a class="text-dark pe-5" href="/user/{{ Auth::user()->id }}"> {{ Auth::user()->name }}</a>
       @else
-      <a class="button" href="{{ url('/login') }}"> Login </a>
-      <a class="button" href="{{ url('/register') }}"> Register </a>
+      <a class="btn btn-danger btn-lg" href="{{ url('/login') }}"> Login </a>
+      <a class="btn btn-danger btn-lg" href="{{ url('/register') }}"> Register </a>
       @endif
     </header>
-    <section id="content">
-      @yield('content')
+    <div class="full-height">
+      <section id="content">
+        @yield('content')
+    </div>
     </section>
   </main>
 
-  <footer style="text-align:center;">
-    <a class="button" href="{{ url('/about') }}"> About us </a>
-    <a class="button" href="{{ url('/faq') }}"> FAQ's </a>
+  <footer class="footer" style="text-align:center;">
+    <a class="btn btn-danger btn-lg" href="{{ url('/about') }}"> About us </a>
+    <a class="btn btn-danger btn-lg" href="{{ url('/faq') }}"> FAQ's </a>
   </footer>
 </body>
 
