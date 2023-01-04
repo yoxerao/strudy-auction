@@ -65,10 +65,6 @@
                         @csrf
                         <button type="submit" class="btn btn-danger">Follow Auction</button>
                     </form>
-                    <form action="{{ route('deleteBid', $auction->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Remove Bid</button>
-                    </form>
                 @endif
             
                 <a href="/auction/followers/{{ $auction->id }}">
